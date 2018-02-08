@@ -1,0 +1,13 @@
+@import '../../node_modules/reset-css/reset.css';
+
+body {
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  color: rgb(250, 250, 250);
+  background: #292929;
+}
+
+.page-wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+}

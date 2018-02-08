@@ -1,20 +1,16 @@
 export default class Movie {
-  constructor(key) {
-    this.key = key;
-  }
-
   /**
    * get movies list
    */
-  movies() {
+  list() {
     // ajax
   }
 
   /**
    * get details single movie
-   * @params: id(Int)
+   * @params: arr(Array)
    */
-  find() {
+  find(arr) {
     // ajax
   }
 
@@ -31,5 +27,9 @@ export default class Movie {
    */
   favorites(arr) {
     // get favorite movies
+  }
+
+  init() {
+    this.auth();
   }
 }
