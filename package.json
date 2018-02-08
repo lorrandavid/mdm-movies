@@ -4,7 +4,7 @@
   "description": "",
   "main": ".eslintrc.js",
   "scripts": {
-    "watchify": "watchify js/app.js  -o js/bundle.js -t -v [ babelify --presets [env] ]"
+    "watchify": "watchify assets/js/app.js  -o assets/js/bundle.js -t -v [ babelify --presets [env] ]"
   },
   "repository": {
     "type": "git",
