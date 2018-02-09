@@ -3,27 +3,20 @@ import Helpers from './helpers';
 
 export default class Movie {
   constructor() {
-    this.key = undefined;
-  }
-
-  /**
-   * get authentication
-   */
-  auth() {
-    axios.get('./assets/js/auth.json')
-      .then((res) => {
-        this.key = res.data.apiKey;
-      })
-      .catch((err) => {
-        throw new Error(Helpers.makeError(err));
-      });
+    this.key = '21be541f1012e12adf6f3fa072059793';
   }
 
   /**
    * get movies list
    */
   list() {
-    // ajax
+    axios.get('movie/popular')
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        throw new Error(Helpers.makeError(err));
+      });
   }
 
   /**
