@@ -1,4 +1,24 @@
+import axios from 'axios';
+import Helpers from './helpers';
+
 export default class Movie {
+  constructor() {
+    this.key = undefined;
+  }
+
+  /**
+   * get authentication
+   */
+  auth() {
+    axios.get('./assets/js/auth.json')
+      .then((res) => {
+        this.key = res.data.apiKey;
+      })
+      .catch((err) => {
+        throw new Error(Helpers.makeError(err));
+      });
+  }
+
   /**
    * get movies list
    */

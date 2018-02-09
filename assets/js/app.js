@@ -1,25 +1,6 @@
-class App {
-  /**
-   * get authentication
-   */
-  auth() {
-    fetch('./assets/js/auth.json')
-      .then(res => res.json())
-      .then((res) => {
-        this.key = res.apiKey;
-      })
-      .catch((err) => {
-        throw new Error(`Something unexpected happened: ${err}`);
-      });
-  }
+import Movie from './movie';
 
-  /**
-   * make api url
-   */
-  makeApiURL(query) {
-    return `https://api.themoviedb.org/3/${query}?api_key=${this.key}`;
-  }
-}
+class App {}
 
-const app = new App();
-app.init();
+const movies = new Movie();
+movies.init();
