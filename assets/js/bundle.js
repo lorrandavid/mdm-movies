@@ -1,24 +1,52 @@
 (function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _axios = require('axios');
+
+var _axios2 = _interopRequireDefault(_axios);
+
 var _movie = require('./movie');
 
 var _movie2 = _interopRequireDefault(_movie);
+
+var _helpers = require('./helpers');
+
+var _helpers2 = _interopRequireDefault(_helpers);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var App = function App() {
-  _classCallCheck(this, App);
-};
+var App = function () {
+  function App() {
+    _classCallCheck(this, App);
 
-var movies = new _movie2.default();
-movies.init();
-movies.list();
+    this.movie = new _movie2.default();
+  }
 
-},{"./movie":3}],2:[function(require,module,exports){
-"use strict";
+  _createClass(App, [{
+    key: 'init',
+    value: function init() {
+      // Pages
+      _axios2.default.all([this.movie.list(), this.movie.discover()]).then(_axios2.default.spread(function (list, discover) {
+        UI.renderDiscoverMovies(discover.data.results);
+        UI.renderListMovies(list.data.results);
+      })).catch(function (err) {
+        throw new Error(_helpers2.default.makeError(err));
+      });
+    }
+  }]);
+
+  return App;
+}();
+
+var app = new App();
+app.init();
+
+},{"./helpers":2,"./movie":3,"axios":4}],2:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -27,8 +55,11 @@ exports.default = {
   /**
    * make api url
    */
-  makeURL: function makeURL(query, apiKey) {
-    return "https://api.themoviedb.org/3/" + query + "?api_key=" + apiKey;
+  makeURL: function makeURL(query) {
+    var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+    var apiKey = arguments[2];
+
+    return 'https://api.themoviedb.org/3/' + query + '?api_key=' + apiKey + opts;
   },
 
 
@@ -36,7 +67,7 @@ exports.default = {
    * make error
    */
   makeError: function makeError(err) {
-    return "Something unexpected happened: " + err;
+    return 'Something unexpected happened: ' + err;
   }
 };
 
@@ -65,34 +96,32 @@ var Movie = function () {
   function Movie() {
     _classCallCheck(this, Movie);
 
-    this.key = undefined;
+    this.key = '21be541f1012e12adf6f3fa072059793';
   }
 
   /**
-   * get authentication
+   * get movies list
    */
 
 
   _createClass(Movie, [{
-    key: 'auth',
-    value: function auth() {
-      var _this = this;
+    key: 'list',
+    value: function list() {
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
 
-      _axios2.default.get('./assets/js/auth.json').then(function (res) {
-        _this.key = res.data.apiKey;
-      }).catch(function (err) {
-        throw new Error(_helpers2.default.makeError(err));
-      });
+      return _axios2.default.get(_helpers2.default.makeURL('movie/popular', '&page=' + page, this.key));
     }
 
     /**
-     * get movies list
+     * get discover list
      */
 
   }, {
-    key: 'list',
-    value: function list() {
-      console.log(this.key);
+    key: 'discover',
+    value: function discover() {
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+
+      return _axios2.default.get(_helpers2.default.makeURL('discover/movie', '&page=' + page + '&sort_by=popularity.desc', this.key));
     }
 
     /**
@@ -102,29 +131,17 @@ var Movie = function () {
 
   }, {
     key: 'find',
-    value: function find(arr) {}
-    // ajax
+    value: function find(arr) {
+      var _this = this;
 
-
-    /**
-     * get discover list
-     */
-
-  }, {
-    key: 'discover',
-    value: function discover() {}
-    // ajax
-
-
-    /**
-     * get favorite movies
-     * @params: arr(Array)
-     */
-
-  }, {
-    key: 'favorites',
-    value: function favorites(arr) {
-      // get favorite movies
+      var movies = [];
+      arr.forEach(function (id) {
+        _axios2.default.get('/movie/' + id, '', _this.key).then(function (res) {
+          movies.push(res);
+        }).catch(function (err) {
+          throw new Error(_helpers2.default.makeError(err));
+        });
+      });
     }
   }, {
     key: 'init',

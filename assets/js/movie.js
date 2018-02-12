@@ -9,14 +9,15 @@ export default class Movie {
   /**
    * get movies list
    */
-  list() {
-    axios.get('movie/popular')
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        throw new Error(Helpers.makeError(err));
-      });
+  list(page = 1) {
+    return axios.get(Helpers.makeURL('movie/popular', `&page=${page}`, this.key));
+  }
+
+  /**
+   * get discover list
+   */
+  discover(page = 1) {
+    return axios.get(Helpers.makeURL('discover/movie', `&page=${page}&sort_by=popularity.desc`, this.key));
   }
 
   /**
@@ -24,22 +25,16 @@ export default class Movie {
    * @params: arr(Array)
    */
   find(arr) {
-    // ajax
-  }
-
-  /**
-   * get discover list
-   */
-  discover() {
-    // ajax
-  }
-
-  /**
-   * get favorite movies
-   * @params: arr(Array)
-   */
-  favorites(arr) {
-    // get favorite movies
+    const movies = [];
+    arr.forEach((id) => {
+      axios.get(`/movie/${id}`, '', this.key)
+        .then((res) => {
+          movies.push(res);
+        })
+        .catch((err) => {
+          throw new Error(Helpers.makeError(err));
+        });
+    });
   }
 
   init() {
