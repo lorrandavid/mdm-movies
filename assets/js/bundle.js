@@ -29,10 +29,10 @@ var App = function () {
   _createClass(App, [{
     key: 'init',
     value: function init() {
-      // Pages
       _axios2.default.all([this.movie.list(), this.movie.discover()]).then(_axios2.default.spread(function (list, discover) {
-        UI.renderDiscoverMovies(discover.data.results);
-        UI.renderListMovies(list.data.results);
+        console.log(list);
+        // UI.renderListMovies(list.data.results);
+        // UI.renderDiscoverMovies(discover.data.results);
       })).catch(function (err) {
         throw new Error(_helpers2.default.makeError(err));
       });
