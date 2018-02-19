@@ -1,18 +1,18 @@
 import axios from 'axios';
 import Movie from './movie';
+import UI from './ui';
 import Helpers from './helpers';
 
 class App {
   constructor() {
-    this.movie = new Movie();
+    this.Movie = new Movie();
+    this.UI = new UI();
   }
 
   init() {
-    axios.all([this.movie.list(), this.movie.discover()])
+    axios.all([this.Movie.list(), this.Movie.discover()])
       .then(axios.spread((list, discover) => {
-        console.log(list);
-        // UI.renderListMovies(list.data.results);
-        // UI.renderDiscoverMovies(discover.data.results);
+        this.UI.listMovies(list.data.results);
       }))
       .catch((err) => {
         throw new Error(Helpers.makeError(err));
