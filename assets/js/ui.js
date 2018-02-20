@@ -2,7 +2,16 @@ import Helpers from './helpers';
 
 export default class UI {
   constructor() {
-    this.popularContainer = document.querySelector('[data-js="popularGrid"]');
+    this.popular = [];
+    this.popularStart = 0;
+    this.popularOffset = 5;
+  }
+
+  init() {
+    document.querySelector('[data-js="loadPopular"]').addEventListener('click', (e) => {
+      e.preventDefault();
+      this.loadPopular();
+    });
   }
 
   render(data) {
@@ -27,10 +36,28 @@ export default class UI {
    * render list movies
    * @params: movies(Array)
    */
-  listMovies(movies) {
+  listPopular(movies) {
     const $grid = document.querySelector('[data-js="popularGrid"');
+    const moviesToRender = movies.slice(this.popularStart, this.popularOffset);
+    this.popular = this.popular.concat(movies);
 
-    movies.forEach((movie) => {
+    moviesToRender.forEach((movie) => {
+      $grid.insertAdjacentHTML('beforeend', this.render(movie));
+    });
+  }
+
+  loadPopular() {
+    this.popularStart += 5;
+    this.popularOffset += 5;
+
+    // Verify if popularOffset.length > this.popular
+    // If yes, load more movies, then call loadPopular again
+    // Might need to change events to App.js
+
+    const $grid = document.querySelector('[data-js="popularGrid"');
+    const moviesToRender = this.popular.slice(this.popularStart, this.popularOffset);
+
+    moviesToRender.forEach((movie) => {
       $grid.insertAdjacentHTML('beforeend', this.render(movie));
     });
   }

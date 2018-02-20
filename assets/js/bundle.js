@@ -36,8 +36,10 @@ var App = function () {
     value: function init() {
       var _this = this;
 
+      this.UI.init();
+
       _axios2.default.all([this.Movie.list(), this.Movie.discover()]).then(_axios2.default.spread(function (list, discover) {
-        _this.UI.listMovies(list.data.results);
+        _this.UI.listPopular(list.data.results);
       })).catch(function (err) {
         throw new Error(_helpers2.default.makeError(err));
       });
@@ -83,11 +85,11 @@ exports.default = {
    * @params: value(String)
    */
   truncate: function truncate(value) {
-    if (string.length < 140) {
+    if (value.length < 140) {
       return;
     }
 
-    return string.substring(0, 137) + '...';
+    return value.substring(0, 137) + '...';
   },
 
 
@@ -96,7 +98,7 @@ exports.default = {
    * @params: value(Number)
    */
   calculateRating: function calculateRating(value) {
-    return number * 5 / 10;
+    return value * 5 / 10;
   }
 };
 
@@ -205,10 +207,22 @@ var UI = function () {
   function UI() {
     _classCallCheck(this, UI);
 
-    this.popularContainer = document.querySelector('[data-js="popularGrid"]');
+    this.popular = [];
+    this.popularStart = 0;
+    this.popularOffset = 5;
   }
 
   _createClass(UI, [{
+    key: 'init',
+    value: function init() {
+      var _this = this;
+
+      document.querySelector('[data-js="loadPopular"]').addEventListener('click', function (e) {
+        e.preventDefault();
+        _this.loadPopular();
+      });
+    }
+  }, {
     key: 'render',
     value: function render(data) {
       var vote_average = data.vote_average,
@@ -225,14 +239,35 @@ var UI = function () {
      */
 
   }, {
-    key: 'listMovies',
-    value: function listMovies(movies) {
-      var _this = this;
+    key: 'listPopular',
+    value: function listPopular(movies) {
+      var _this2 = this;
 
       var $grid = document.querySelector('[data-js="popularGrid"');
+      var moviesToRender = movies.slice(this.popularStart, this.popularOffset);
+      this.popular = this.popular.concat(movies);
 
-      movies.forEach(function (movie) {
-        $grid.insertAdjacentHTML('beforeend', _this.render(movie));
+      moviesToRender.forEach(function (movie) {
+        $grid.insertAdjacentHTML('beforeend', _this2.render(movie));
+      });
+    }
+  }, {
+    key: 'loadPopular',
+    value: function loadPopular() {
+      var _this3 = this;
+
+      this.popularStart += 5;
+      this.popularOffset += 5;
+
+      // Verify if popularOffset.length > this.popular
+      // If yes, load more movies, then call loadPopular again
+      // Might need to change events to App.js
+
+      var $grid = document.querySelector('[data-js="popularGrid"');
+      var moviesToRender = this.popular.slice(this.popularStart, this.popularOffset);
+
+      moviesToRender.forEach(function (movie) {
+        $grid.insertAdjacentHTML('beforeend', _this3.render(movie));
       });
     }
 
