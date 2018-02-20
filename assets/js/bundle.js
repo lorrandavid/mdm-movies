@@ -32,14 +32,44 @@ var App = function () {
   }
 
   _createClass(App, [{
-    key: 'init',
-    value: function init() {
+    key: '_handleLoadPopular',
+    value: function _handleLoadPopular(e) {
       var _this = this;
 
-      this.UI.init();
+      e.preventDefault();
+
+      if (this.UI.popularOffset >= this.UI.popular.length) {
+        this.Movie.list().then(function (res) {
+          _this.UI.listPopular(res.data.results);
+          _this.UI.loadPopular();
+        }).catch(function (err) {
+          throw new Error(_helpers2.default.makeError(err));
+        });
+      } else {
+        this.UI.loadPopular();
+      }
+    }
+  }, {
+    key: 'initEvents',
+    value: function initEvents() {
+      var _this2 = this;
+
+      var _UI$elements = this.UI.elements(),
+          $btnLoadPopular = _UI$elements.$btnLoadPopular;
+
+      $btnLoadPopular.addEventListener('click', function (e) {
+        _this2._handleLoadPopular(e);
+      });
+    }
+  }, {
+    key: 'init',
+    value: function init() {
+      var _this3 = this;
+
+      this.initEvents();
 
       _axios2.default.all([this.Movie.list(), this.Movie.discover()]).then(_axios2.default.spread(function (list, discover) {
-        _this.UI.listPopular(list.data.results);
+        _this3.UI.listPopular(list.data.results);
       })).catch(function (err) {
         throw new Error(_helpers2.default.makeError(err));
       });
@@ -128,6 +158,8 @@ var Movie = function () {
     _classCallCheck(this, Movie);
 
     this.key = '21be541f1012e12adf6f3fa072059793';
+    this.listPage = 0;
+    this.discoverPage = 0;
   }
 
   /**
@@ -138,9 +170,8 @@ var Movie = function () {
   _createClass(Movie, [{
     key: 'list',
     value: function list() {
-      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-
-      return _axios2.default.get(_helpers2.default.makeURL('movie/popular', '&page=' + page, this.key));
+      this.listPage++;
+      return _axios2.default.get(_helpers2.default.makeURL('movie/popular', '&page=' + this.listPage, this.key));
     }
 
     /**
@@ -150,9 +181,8 @@ var Movie = function () {
   }, {
     key: 'discover',
     value: function discover() {
-      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-
-      return _axios2.default.get(_helpers2.default.makeURL('discover/movie', '&page=' + page + '&sort_by=popularity.desc', this.key));
+      this.discoverPage++;
+      return _axios2.default.get(_helpers2.default.makeURL('discover/movie', '&page=' + this.discoverPage + '&sort_by=popularity.desc', this.key));
     }
 
     /**
@@ -212,16 +242,23 @@ var UI = function () {
     this.popularOffset = 5;
   }
 
-  _createClass(UI, [{
-    key: 'init',
-    value: function init() {
-      var _this = this;
+  /**
+   * ui elements
+   */
 
-      document.querySelector('[data-js="loadPopular"]').addEventListener('click', function (e) {
-        e.preventDefault();
-        _this.loadPopular();
-      });
+
+  _createClass(UI, [{
+    key: 'elements',
+    value: function elements() {
+      return {
+        $btnLoadPopular: document.querySelector('[data-js="loadPopular"]')
+      };
     }
+
+    /**
+     * render template movie
+     */
+
   }, {
     key: 'render',
     value: function render(data) {
@@ -241,33 +278,34 @@ var UI = function () {
   }, {
     key: 'listPopular',
     value: function listPopular(movies) {
-      var _this2 = this;
+      var _this = this;
 
       var $grid = document.querySelector('[data-js="popularGrid"');
       var moviesToRender = movies.slice(this.popularStart, this.popularOffset);
       this.popular = this.popular.concat(movies);
 
       moviesToRender.forEach(function (movie) {
-        $grid.insertAdjacentHTML('beforeend', _this2.render(movie));
+        $grid.insertAdjacentHTML('beforeend', _this.render(movie));
       });
     }
+
+    /**
+     * load more popular
+     */
+
   }, {
     key: 'loadPopular',
     value: function loadPopular() {
-      var _this3 = this;
+      var _this2 = this;
 
       this.popularStart += 5;
       this.popularOffset += 5;
-
-      // Verify if popularOffset.length > this.popular
-      // If yes, load more movies, then call loadPopular again
-      // Might need to change events to App.js
 
       var $grid = document.querySelector('[data-js="popularGrid"');
       var moviesToRender = this.popular.slice(this.popularStart, this.popularOffset);
 
       moviesToRender.forEach(function (movie) {
-        $grid.insertAdjacentHTML('beforeend', _this3.render(movie));
+        $grid.insertAdjacentHTML('beforeend', _this2.render(movie));
       });
     }
 

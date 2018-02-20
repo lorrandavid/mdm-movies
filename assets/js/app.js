@@ -9,8 +9,33 @@ class App {
     this.UI = new UI();
   }
 
+  _handleLoadPopular(e) {
+    e.preventDefault();
+
+    if (this.UI.popularOffset >= this.UI.popular.length) {
+      this.Movie.list()
+        .then((res) => {
+          this.UI.listPopular(res.data.results);
+          this.UI.loadPopular();
+        })
+        .catch((err) => {
+          throw new Error(Helpers.makeError(err));
+        });
+    } else {
+      this.UI.loadPopular();
+    }
+  }
+
+  initEvents() {
+    const { $btnLoadPopular } = this.UI.elements();
+
+    $btnLoadPopular.addEventListener('click', (e) => {
+      this._handleLoadPopular(e)
+    });
+  }
+
   init() {
-    this.UI.init();
+    this.initEvents();
 
     axios.all([this.Movie.list(), this.Movie.discover()])
       .then(axios.spread((list, discover) => {

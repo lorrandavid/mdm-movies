@@ -7,13 +7,18 @@ export default class UI {
     this.popularOffset = 5;
   }
 
-  init() {
-    document.querySelector('[data-js="loadPopular"]').addEventListener('click', (e) => {
-      e.preventDefault();
-      this.loadPopular();
-    });
+  /**
+   * ui elements
+   */
+  elements() {
+    return {
+      $btnLoadPopular: document.querySelector('[data-js="loadPopular"]')
+    };
   }
 
+  /**
+   * render template movie
+   */
   render(data) {
     const { vote_average, poster_path, title, overview } = data;
     return `
@@ -46,13 +51,12 @@ export default class UI {
     });
   }
 
+  /**
+   * load more popular
+   */
   loadPopular() {
     this.popularStart += 5;
     this.popularOffset += 5;
-
-    // Verify if popularOffset.length > this.popular
-    // If yes, load more movies, then call loadPopular again
-    // Might need to change events to App.js
 
     const $grid = document.querySelector('[data-js="popularGrid"');
     const moviesToRender = this.popular.slice(this.popularStart, this.popularOffset);

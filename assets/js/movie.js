@@ -4,20 +4,24 @@ import Helpers from './helpers';
 export default class Movie {
   constructor() {
     this.key = '21be541f1012e12adf6f3fa072059793';
+    this.listPage = 0;
+    this.discoverPage = 0;
   }
 
   /**
    * get movies list
    */
-  list(page = 1) {
-    return axios.get(Helpers.makeURL('movie/popular', `&page=${page}`, this.key));
+  list() {
+    this.listPage++;
+    return axios.get(Helpers.makeURL('movie/popular', `&page=${this.listPage}`, this.key));
   }
 
   /**
    * get discover list
    */
-  discover(page = 1) {
-    return axios.get(Helpers.makeURL('discover/movie', `&page=${page}&sort_by=popularity.desc`, this.key));
+  discover() {
+    this.discoverPage++;
+    return axios.get(Helpers.makeURL('discover/movie', `&page=${this.discoverPage}&sort_by=popularity.desc`, this.key));
   }
 
   /**
