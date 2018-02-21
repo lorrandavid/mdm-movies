@@ -5,6 +5,10 @@ export default class UI {
     this.popular = [];
     this.popularStart = 0;
     this.popularOffset = 5;
+
+    this.discover = [];
+    this.discoverStart = 0;
+    this.discoverOffset = 5;
   }
 
   /**
@@ -12,7 +16,8 @@ export default class UI {
    */
   elements() {
     return {
-      $btnLoadPopular: document.querySelector('[data-js="loadPopular"]')
+      $btnLoadPopular: document.querySelector('[data-js="loadPopular"]'),
+      $btnLoadDiscover: document.querySelector('[data-js="loadDiscover"]')
     };
   }
 
@@ -55,6 +60,23 @@ export default class UI {
   }
 
   /**
+   * render discover movies
+   * @params: movies(Array)
+   */
+  listDiscover(movies) {
+    if (typeof movies !== 'undefined') {
+      this.discover = this.discover.concat(movies);
+    }
+
+    const $grid = document.querySelector('[data-js="discoverGrid"');
+    const moviesToRender = this.discover.slice(this.discoverStart, this.discoverOffset);
+
+    moviesToRender.forEach((movie) => {
+      $grid.insertAdjacentHTML('beforeend', this.render(movie));
+    });
+  }
+
+  /**
    * load more popular
    */
   loadPopular() {
@@ -63,10 +85,10 @@ export default class UI {
   }
 
   /**
-   * render discover movies
-   * @params: movies(Array)
+   * load more discover
    */
-  renderDiscoverMovies(movies) {
-    // render
+  loadDiscover() {
+    this.discoverStart += 5;
+    this.discoverOffset += 5;
   }
 }

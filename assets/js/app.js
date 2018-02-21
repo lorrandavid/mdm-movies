@@ -13,7 +13,7 @@ class App {
     e.preventDefault();
     this.UI.loadPopular();
 
-    if (this.UI.popularOffset >= this.UI.popular.length) {
+    if (this.UI.popularOffset > this.UI.popular.length) {
       this.Movie.list()
         .then((res) => {
           this.UI.listPopular(res.data.results);
@@ -26,11 +26,32 @@ class App {
     }
   }
 
+  _handleLoadDiscover(e) {
+    e.preventDefault();
+    this.UI.loadDiscover();
+
+    if (this.UI.discoverOffset > this.UI.discover.length) {
+      this.Movie.discover()
+        .then((res) => {
+          this.UI.listDiscover(res.data.results);
+        })
+        .catch((err) => {
+          throw new Error(Helpers.makeError(err));
+        });
+    } else {
+      this.UI.listDiscover();
+    }
+  }
+
   initEvents() {
-    const { $btnLoadPopular } = this.UI.elements();
+    const { $btnLoadPopular, $btnLoadDiscover } = this.UI.elements();
 
     $btnLoadPopular.addEventListener('click', (e) => {
       this._handleLoadPopular(e)
+    });
+
+    $btnLoadDiscover.addEventListener('click', (e) => {
+      this._handleLoadDiscover(e)
     });
   }
 
@@ -40,6 +61,7 @@ class App {
     axios.all([this.Movie.list(), this.Movie.discover()])
       .then(axios.spread((list, discover) => {
         this.UI.listPopular(list.data.results);
+        this.UI.listDiscover(discover.data.results);
       }))
       .catch((err) => {
         throw new Error(Helpers.makeError(err));

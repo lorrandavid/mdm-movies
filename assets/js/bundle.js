@@ -39,7 +39,7 @@ var App = function () {
       e.preventDefault();
       this.UI.loadPopular();
 
-      if (this.UI.popularOffset >= this.UI.popular.length) {
+      if (this.UI.popularOffset > this.UI.popular.length) {
         this.Movie.list().then(function (res) {
           _this.UI.listPopular(res.data.results);
         }).catch(function (err) {
@@ -50,26 +50,50 @@ var App = function () {
       }
     }
   }, {
-    key: 'initEvents',
-    value: function initEvents() {
+    key: '_handleLoadDiscover',
+    value: function _handleLoadDiscover(e) {
       var _this2 = this;
 
+      e.preventDefault();
+      this.UI.loadDiscover();
+
+      if (this.UI.discoverOffset > this.UI.discover.length) {
+        this.Movie.discover().then(function (res) {
+          _this2.UI.listDiscover(res.data.results);
+        }).catch(function (err) {
+          throw new Error(_helpers2.default.makeError(err));
+        });
+      } else {
+        this.UI.listDiscover();
+      }
+    }
+  }, {
+    key: 'initEvents',
+    value: function initEvents() {
+      var _this3 = this;
+
       var _UI$elements = this.UI.elements(),
-          $btnLoadPopular = _UI$elements.$btnLoadPopular;
+          $btnLoadPopular = _UI$elements.$btnLoadPopular,
+          $btnLoadDiscover = _UI$elements.$btnLoadDiscover;
 
       $btnLoadPopular.addEventListener('click', function (e) {
-        _this2._handleLoadPopular(e);
+        _this3._handleLoadPopular(e);
+      });
+
+      $btnLoadDiscover.addEventListener('click', function (e) {
+        _this3._handleLoadDiscover(e);
       });
     }
   }, {
     key: 'init',
     value: function init() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.initEvents();
 
       _axios2.default.all([this.Movie.list(), this.Movie.discover()]).then(_axios2.default.spread(function (list, discover) {
-        _this3.UI.listPopular(list.data.results);
+        _this4.UI.listPopular(list.data.results);
+        _this4.UI.listDiscover(discover.data.results);
       })).catch(function (err) {
         throw new Error(_helpers2.default.makeError(err));
       });
@@ -240,6 +264,10 @@ var UI = function () {
     this.popular = [];
     this.popularStart = 0;
     this.popularOffset = 5;
+
+    this.discover = [];
+    this.discoverStart = 0;
+    this.discoverOffset = 5;
   }
 
   /**
@@ -251,7 +279,8 @@ var UI = function () {
     key: 'elements',
     value: function elements() {
       return {
-        $btnLoadPopular: document.querySelector('[data-js="loadPopular"]')
+        $btnLoadPopular: document.querySelector('[data-js="loadPopular"]'),
+        $btnLoadDiscover: document.querySelector('[data-js="loadDiscover"]')
       };
     }
 
@@ -293,6 +322,28 @@ var UI = function () {
     }
 
     /**
+     * render discover movies
+     * @params: movies(Array)
+     */
+
+  }, {
+    key: 'listDiscover',
+    value: function listDiscover(movies) {
+      var _this2 = this;
+
+      if (typeof movies !== 'undefined') {
+        this.discover = this.discover.concat(movies);
+      }
+
+      var $grid = document.querySelector('[data-js="discoverGrid"');
+      var moviesToRender = this.discover.slice(this.discoverStart, this.discoverOffset);
+
+      moviesToRender.forEach(function (movie) {
+        $grid.insertAdjacentHTML('beforeend', _this2.render(movie));
+      });
+    }
+
+    /**
      * load more popular
      */
 
@@ -304,14 +355,14 @@ var UI = function () {
     }
 
     /**
-     * render discover movies
-     * @params: movies(Array)
+     * load more discover
      */
 
   }, {
-    key: 'renderDiscoverMovies',
-    value: function renderDiscoverMovies(movies) {
-      // render
+    key: 'loadDiscover',
+    value: function loadDiscover() {
+      this.discoverStart += 5;
+      this.discoverOffset += 5;
     }
   }]);
 
