@@ -37,16 +37,16 @@ var App = function () {
       var _this = this;
 
       e.preventDefault();
+      this.UI.loadPopular();
 
       if (this.UI.popularOffset >= this.UI.popular.length) {
         this.Movie.list().then(function (res) {
           _this.UI.listPopular(res.data.results);
-          _this.UI.loadPopular();
         }).catch(function (err) {
           throw new Error(_helpers2.default.makeError(err));
         });
       } else {
-        this.UI.loadPopular();
+        this.UI.listPopular();
       }
     }
   }, {
@@ -280,9 +280,12 @@ var UI = function () {
     value: function listPopular(movies) {
       var _this = this;
 
+      if (typeof movies !== 'undefined') {
+        this.popular = this.popular.concat(movies);
+      }
+
       var $grid = document.querySelector('[data-js="popularGrid"');
-      var moviesToRender = movies.slice(this.popularStart, this.popularOffset);
-      this.popular = this.popular.concat(movies);
+      var moviesToRender = this.popular.slice(this.popularStart, this.popularOffset);
 
       moviesToRender.forEach(function (movie) {
         $grid.insertAdjacentHTML('beforeend', _this.render(movie));
@@ -296,17 +299,8 @@ var UI = function () {
   }, {
     key: 'loadPopular',
     value: function loadPopular() {
-      var _this2 = this;
-
       this.popularStart += 5;
       this.popularOffset += 5;
-
-      var $grid = document.querySelector('[data-js="popularGrid"');
-      var moviesToRender = this.popular.slice(this.popularStart, this.popularOffset);
-
-      moviesToRender.forEach(function (movie) {
-        $grid.insertAdjacentHTML('beforeend', _this2.render(movie));
-      });
     }
 
     /**

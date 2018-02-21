@@ -11,18 +11,18 @@ class App {
 
   _handleLoadPopular(e) {
     e.preventDefault();
+    this.UI.loadPopular();
 
     if (this.UI.popularOffset >= this.UI.popular.length) {
       this.Movie.list()
         .then((res) => {
           this.UI.listPopular(res.data.results);
-          this.UI.loadPopular();
         })
         .catch((err) => {
           throw new Error(Helpers.makeError(err));
         });
     } else {
-      this.UI.loadPopular();
+      this.UI.listPopular();
     }
   }
 

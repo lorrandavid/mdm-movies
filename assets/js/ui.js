@@ -42,9 +42,12 @@ export default class UI {
    * @params: movies(Array)
    */
   listPopular(movies) {
+    if (typeof movies !== 'undefined') {
+      this.popular = this.popular.concat(movies);
+    }
+
     const $grid = document.querySelector('[data-js="popularGrid"');
-    const moviesToRender = movies.slice(this.popularStart, this.popularOffset);
-    this.popular = this.popular.concat(movies);
+    const moviesToRender = this.popular.slice(this.popularStart, this.popularOffset);
 
     moviesToRender.forEach((movie) => {
       $grid.insertAdjacentHTML('beforeend', this.render(movie));
@@ -57,13 +60,6 @@ export default class UI {
   loadPopular() {
     this.popularStart += 5;
     this.popularOffset += 5;
-
-    const $grid = document.querySelector('[data-js="popularGrid"');
-    const moviesToRender = this.popular.slice(this.popularStart, this.popularOffset);
-
-    moviesToRender.forEach((movie) => {
-      $grid.insertAdjacentHTML('beforeend', this.render(movie));
-    });
   }
 
   /**
