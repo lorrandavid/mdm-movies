@@ -25,20 +25,23 @@ export default class UI {
    * render template movie
    */
   render(data) {
-    const { vote_average, poster_path, title, overview } = data;
+    const { poster_path, title, vote_average } = data;
+    console.log(data);
+
     return `
-      <div class="movie">
-        <div class="movie-header">
-          <div class="movie-header__rating">
-            <span class="movie-header__rating__star"></span><span class="movie-header__rating__text">${Helpers.calculateRating(vote_average)}</span>
+      <a href="#" class="movie" data-js="movie">
+        <div class="movie-wrap">
+          <div class="movie-header">
+            <img src="https://image.tmdb.org/t/p/w500${poster_path}" alt="${title}" class="movie-header__img">
           </div>
-          <img src="https://image.tmdb.org/t/p/w500${poster_path}" alt="${title}" class="movie-header__img">
-          <h3 class="movie-header__title">${title}</h3>
+          <div class="movie-content">
+            <h3 class="movie-header__title">${title}</h3>
+            <div class="movie-content__rating">
+              <span class="movie-header__rating__star"></span><span class="movie-header__rating__text">${Helpers.calculateRating(vote_average)}</span>
+            </div>
+          </div>
         </div>
-        <div class="movie-content">
-          <p class="movie-content__text">${Helpers.truncate(overview)}</p>
-        </div>
-      </div>
+      </a>
     `;
   }
 

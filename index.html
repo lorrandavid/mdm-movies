@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>MDM Movies</title>
-  <link href="https://fonts.googleapis.com/css?family=Nunito:400,600" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700,800" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
-<body>
-  <div class="page-wrapper">
+<body class="details-opened">
+  <div class="page-wrapper" data-js="pageWrapper">
     <div class="header">
       <h1>Logo</h1>
     </div>
 
-    <section class="section">
+    <section class="section mb-100">
       <div class="input-wrapper">
         <input type="text" placeholder="Search movie">
         <!-- search icon -->
@@ -23,7 +23,7 @@
 
     <section class="section mb-100">
       <div class="section-header">
-        <h2>Popular</h2>
+        <h2 class="section-header__title">Popular</h2>
       </div>
       <div class="grid" data-js="popularGrid"></div>
       <a href="#" data-js="loadPopular">Carregar</a>
@@ -31,7 +31,7 @@
 
     <section class="section mb-100">
       <div class="section-header">
-        <h2>Discover</h2>
+        <h2 class="section-header__title">Discover</h2>
       </div>
       <div class="grid" data-js="discoverGrid"></div>
       <a href="#" data-js="loadDiscover">Carregar</a>
@@ -41,6 +41,47 @@
       Copyright
     </div>
   </div>
+
+  <div class="movie-details" data-js="movieDetails">
+    <article class="movie-details__content">
+      <div>
+        // backdrop
+      </div>
+
+      <div class="grid movie-details__content">
+        <div class="movie-details__overview">
+          <h3 class="movies-details__title">Overview</h3>
+          <p class="movies-details__text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde facilis, molestiae vero. Rerum id fuga enim, labore, porro in! Laborum iste saepe tempore sequi cum accusantium reiciendis voluptates animi. Asperiores?</p>
+        </div>
+
+        <div class="movie-details__genre">
+          <h3 class="movies-details__title">Genre</h3>
+          <p class="movies-details__text">Horror, Adventure</p>
+        </div>
+
+        <div class="movie-details__release">
+          <h3 class="movies-details__title">Release date</h3>
+          <p class="movies-details__text">10/09/2014</p>
+        </div>
+
+        <div class="movie-details__popularity">
+          <h3 class="movies-details__title">Popularity</h3>
+          <p class="movies-details__text">283.795</p>
+        </div>
+
+        <div class="movie-details__vote-count">
+          <h3 class="movies-details__title">Vote count</h3>
+          <p class="movies-details__text">7007</p>
+        </div>
+
+        <div class="movie-details__vote-average">
+          <h3 class="movies-details__title">Vote average</h3>
+          <p class="movies-details__text">7</p>
+        </div>
+      </div>
+    </article>
+  </div>
+
   <script src="assets/js/bundle.js" charset="utf-8"></script>
 </body>
 </html>

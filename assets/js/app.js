@@ -62,6 +62,18 @@ class App {
       .then(axios.spread((list, discover) => {
         this.UI.listPopular(list.data.results);
         this.UI.listDiscover(discover.data.results);
+
+        var $page = document.querySelector('[data-js="pageWrapper"]');
+        var $clone = $page.cloneNode(true);
+        var $blurredDiv = document.createElement('div');
+        var width = $page.offsetWidth;
+        $blurredDiv.className = 'content-blurred';
+        $blurredDiv.appendChild($clone);
+        $blurredDiv.style.width = width + 'px';
+
+
+        var $movieDetails = document.querySelector('[data-js="movieDetails"]');
+        $movieDetails.appendChild($blurredDiv);
       }))
       .catch((err) => {
         throw new Error(Helpers.makeError(err));

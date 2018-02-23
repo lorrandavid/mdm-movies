@@ -94,6 +94,17 @@ var App = function () {
       _axios2.default.all([this.Movie.list(), this.Movie.discover()]).then(_axios2.default.spread(function (list, discover) {
         _this4.UI.listPopular(list.data.results);
         _this4.UI.listDiscover(discover.data.results);
+
+        var $page = document.querySelector('[data-js="pageWrapper"]');
+        var $clone = $page.cloneNode(true);
+        var $blurredDiv = document.createElement('div');
+        var width = $page.offsetWidth;
+        $blurredDiv.className = 'content-blurred';
+        $blurredDiv.appendChild($clone);
+        $blurredDiv.style.width = width + 'px';
+
+        var $movieDetails = document.querySelector('[data-js="movieDetails"]');
+        $movieDetails.appendChild($blurredDiv);
       })).catch(function (err) {
         throw new Error(_helpers2.default.makeError(err));
       });
@@ -291,12 +302,13 @@ var UI = function () {
   }, {
     key: 'render',
     value: function render(data) {
-      var vote_average = data.vote_average,
-          poster_path = data.poster_path,
+      var poster_path = data.poster_path,
           title = data.title,
-          overview = data.overview;
+          vote_average = data.vote_average;
 
-      return '\n      <div class="movie">\n        <div class="movie-header">\n          <div class="movie-header__rating">\n            <span class="movie-header__rating__star"></span><span class="movie-header__rating__text">' + _helpers2.default.calculateRating(vote_average) + '</span>\n          </div>\n          <img src="https://image.tmdb.org/t/p/w500' + poster_path + '" alt="' + title + '" class="movie-header__img">\n          <h3 class="movie-header__title">' + title + '</h3>\n        </div>\n        <div class="movie-content">\n          <p class="movie-content__text">' + _helpers2.default.truncate(overview) + '</p>\n        </div>\n      </div>\n    ';
+      console.log(data);
+
+      return '\n      <a href="#" class="movie" data-js="movie">\n        <div class="movie-wrap">\n          <div class="movie-header">\n            <img src="https://image.tmdb.org/t/p/w500' + poster_path + '" alt="' + title + '" class="movie-header__img">\n          </div>\n          <div class="movie-content">\n            <h3 class="movie-header__title">' + title + '</h3>\n            <div class="movie-content__rating">\n              <span class="movie-header__rating__star"></span><span class="movie-header__rating__text">' + _helpers2.default.calculateRating(vote_average) + '</span>\n            </div>\n          </div>\n        </div>\n      </a>\n    ';
     }
 
     /**
