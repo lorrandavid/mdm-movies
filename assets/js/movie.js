@@ -25,7 +25,7 @@ export default class Movie {
   }
 
   /**
-   * get details single movie
+   * find movies
    * @params: arr(Array)
    */
   find(arr) {
@@ -39,6 +39,14 @@ export default class Movie {
           throw new Error(Helpers.makeError(err));
         });
     });
+  }
+
+  /**
+   * search movies
+   * @params: name(String)
+   */
+  search(name) {
+    return axios.get(Helpers.makeURL('search/movie', `&page=1&sort_by=popularity.desc&query=${name}`, this.key));
   }
 
   init() {

@@ -68,13 +68,32 @@ var App = function () {
       }
     }
   }, {
+    key: '_handleSearch',
+    value: function _handleSearch(e) {
+      var value = e.target.value;
+      var movies = [];
+
+      this.Movie.search(value).then(function (res) {
+        movies.push(res);
+        console.log(movies);
+      }).catch(function (err) {
+        throw new Error(_helpers2.default.makeError(err));
+      });
+    }
+  }, {
+    key: '_handleMovieDetail',
+    value: function _handleMovieDetail(id) {
+      this.UI.show(id);
+    }
+  }, {
     key: 'initEvents',
     value: function initEvents() {
       var _this3 = this;
 
       var _UI$elements = this.UI.elements(),
           $btnLoadPopular = _UI$elements.$btnLoadPopular,
-          $btnLoadDiscover = _UI$elements.$btnLoadDiscover;
+          $btnLoadDiscover = _UI$elements.$btnLoadDiscover,
+          $inputSearch = _UI$elements.$inputSearch;
 
       $btnLoadPopular.addEventListener('click', function (e) {
         _this3._handleLoadPopular(e);
@@ -82,6 +101,18 @@ var App = function () {
 
       $btnLoadDiscover.addEventListener('click', function (e) {
         _this3._handleLoadDiscover(e);
+      });
+
+      $inputSearch.addEventListener('keyup', function (e) {
+        _this3._handleSearch(e);
+      });
+
+      document.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        if (e.target.classList['value'].match(/movie__link/g)) {
+          _this3._handleMovieDetail(e.target.getAttribute('data-id'));
+        }
       });
     }
   }, {
@@ -94,17 +125,6 @@ var App = function () {
       _axios2.default.all([this.Movie.list(), this.Movie.discover()]).then(_axios2.default.spread(function (list, discover) {
         _this4.UI.listPopular(list.data.results);
         _this4.UI.listDiscover(discover.data.results);
-
-        var $page = document.querySelector('[data-js="pageWrapper"]');
-        var $clone = $page.cloneNode(true);
-        var $blurredDiv = document.createElement('div');
-        var width = $page.offsetWidth;
-        $blurredDiv.className = 'content-blurred';
-        $blurredDiv.appendChild($clone);
-        $blurredDiv.style.width = width + 'px';
-
-        var $movieDetails = document.querySelector('[data-js="movieDetails"]');
-        $movieDetails.appendChild($blurredDiv);
       })).catch(function (err) {
         throw new Error(_helpers2.default.makeError(err));
       });
@@ -221,7 +241,7 @@ var Movie = function () {
     }
 
     /**
-     * get details single movie
+     * find movies
      * @params: arr(Array)
      */
 
@@ -238,6 +258,17 @@ var Movie = function () {
           throw new Error(_helpers2.default.makeError(err));
         });
       });
+    }
+
+    /**
+     * search movies
+     * @params: name(String)
+     */
+
+  }, {
+    key: 'search',
+    value: function search(name) {
+      return _axios2.default.get(_helpers2.default.makeURL('search/movie', '&page=1&sort_by=popularity.desc&query=' + name, this.key));
     }
   }, {
     key: 'init',
@@ -291,7 +322,8 @@ var UI = function () {
     value: function elements() {
       return {
         $btnLoadPopular: document.querySelector('[data-js="loadPopular"]'),
-        $btnLoadDiscover: document.querySelector('[data-js="loadDiscover"]')
+        $btnLoadDiscover: document.querySelector('[data-js="loadDiscover"]'),
+        $inputSearch: document.querySelector('[data-js="inputSearch"]')
       };
     }
 
@@ -302,13 +334,13 @@ var UI = function () {
   }, {
     key: 'render',
     value: function render(data) {
-      var poster_path = data.poster_path,
+      var id = data.id,
+          poster_path = data.poster_path,
           title = data.title,
           vote_average = data.vote_average;
 
-      console.log(data);
 
-      return '\n      <a href="#" class="movie" data-js="movie">\n        <div class="movie-wrap">\n          <div class="movie-header">\n            <img src="https://image.tmdb.org/t/p/w500' + poster_path + '" alt="' + title + '" class="movie-header__img">\n          </div>\n          <div class="movie-content">\n            <h3 class="movie-header__title">' + title + '</h3>\n            <div class="movie-content__rating">\n              <span class="movie-header__rating__star"></span><span class="movie-header__rating__text">' + _helpers2.default.calculateRating(vote_average) + '</span>\n            </div>\n          </div>\n        </div>\n      </a>\n    ';
+      return '\n      <div class="movie">\n        <a href="#" class="movie__link" data-id="' + id + '"></a>\n        <div class="movie-wrap">\n          <div class="movie-header">\n            <img src="https://image.tmdb.org/t/p/w500' + poster_path + '" alt="' + title + '" class="movie-header__img">\n          </div>\n          <div class="movie-content">\n            <h3 class="movie-header__title">' + title + '</h3>\n            <div class="movie-content__rating">\n              <span class="movie-header__rating__star"></span><span class="movie-header__rating__text">' + _helpers2.default.calculateRating(vote_average) + '</span>\n            </div>\n          </div>\n        </div>\n      </div>\n    ';
     }
 
     /**
@@ -330,6 +362,20 @@ var UI = function () {
 
       moviesToRender.forEach(function (movie) {
         $grid.insertAdjacentHTML('beforeend', _this.render(movie));
+      });
+    }
+
+    /**
+     * show movie detail
+     * @params: id(Number)
+     */
+
+  }, {
+    key: 'show',
+    value: function show(id) {
+      var allMovies = this.popular.concat(this.discover);
+      var data = allMovies.find(function (val) {
+        return val.id.toString() === id;
       });
     }
 

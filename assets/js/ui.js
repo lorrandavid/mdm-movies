@@ -17,7 +17,8 @@ export default class UI {
   elements() {
     return {
       $btnLoadPopular: document.querySelector('[data-js="loadPopular"]'),
-      $btnLoadDiscover: document.querySelector('[data-js="loadDiscover"]')
+      $btnLoadDiscover: document.querySelector('[data-js="loadDiscover"]'),
+      $inputSearch: document.querySelector('[data-js="inputSearch"]')
     };
   }
 
@@ -25,11 +26,11 @@ export default class UI {
    * render template movie
    */
   render(data) {
-    const { poster_path, title, vote_average } = data;
-    console.log(data);
+    const { id, poster_path, title, vote_average } = data;
 
     return `
-      <a href="#" class="movie" data-js="movie">
+      <div class="movie">
+        <a href="#" class="movie__link" data-id="${id}"></a>
         <div class="movie-wrap">
           <div class="movie-header">
             <img src="https://image.tmdb.org/t/p/w500${poster_path}" alt="${title}" class="movie-header__img">
@@ -41,7 +42,7 @@ export default class UI {
             </div>
           </div>
         </div>
-      </a>
+      </div>
     `;
   }
 
@@ -60,6 +61,15 @@ export default class UI {
     moviesToRender.forEach((movie) => {
       $grid.insertAdjacentHTML('beforeend', this.render(movie));
     });
+  }
+
+  /**
+   * show movie detail
+   * @params: id(Number)
+   */
+  show(id) {
+    const allMovies = this.popular.concat(this.discover);
+    const data = allMovies.find(val => val.id.toString() === id);
   }
 
   /**

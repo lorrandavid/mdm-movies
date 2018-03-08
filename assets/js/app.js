@@ -43,8 +43,26 @@ class App {
     }
   }
 
+  _handleSearch(e) {
+    let value = e.target.value;
+    const movies = [];
+
+    this.Movie.search(value)
+      .then((res) => {
+        movies.push(res);
+        console.log(movies);
+      })
+      .catch((err) => {
+        throw new Error(Helpers.makeError(err));
+      });
+  }
+
+  _handleMovieDetail(id) {
+    this.UI.show(id);
+  }
+
   initEvents() {
-    const { $btnLoadPopular, $btnLoadDiscover } = this.UI.elements();
+    const { $btnLoadPopular, $btnLoadDiscover, $inputSearch } = this.UI.elements();
 
     $btnLoadPopular.addEventListener('click', (e) => {
       this._handleLoadPopular(e)
@@ -52,6 +70,18 @@ class App {
 
     $btnLoadDiscover.addEventListener('click', (e) => {
       this._handleLoadDiscover(e)
+    });
+
+    $inputSearch.addEventListener('keyup', (e) => {
+      this._handleSearch(e)
+    });
+
+    document.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      if (e.target.classList['value'].match(/movie__link/g)) {
+        this._handleMovieDetail(e.target.getAttribute('data-id'));
+      }
     });
   }
 
@@ -62,18 +92,6 @@ class App {
       .then(axios.spread((list, discover) => {
         this.UI.listPopular(list.data.results);
         this.UI.listDiscover(discover.data.results);
-
-        var $page = document.querySelector('[data-js="pageWrapper"]');
-        var $clone = $page.cloneNode(true);
-        var $blurredDiv = document.createElement('div');
-        var width = $page.offsetWidth;
-        $blurredDiv.className = 'content-blurred';
-        $blurredDiv.appendChild($clone);
-        $blurredDiv.style.width = width + 'px';
-
-
-        var $movieDetails = document.querySelector('[data-js="movieDetails"]');
-        $movieDetails.appendChild($blurredDiv);
       }))
       .catch((err) => {
         throw new Error(Helpers.makeError(err));
