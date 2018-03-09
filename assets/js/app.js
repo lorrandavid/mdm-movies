@@ -44,13 +44,12 @@ class App {
   }
 
   _handleSearch(e) {
-    let value = e.target.value;
+    const { value } = e.target.value;
     const movies = [];
 
     this.Movie.search(value)
       .then((res) => {
         movies.push(res);
-        console.log(movies);
       })
       .catch((err) => {
         throw new Error(Helpers.makeError(err));
@@ -58,7 +57,13 @@ class App {
   }
 
   _handleMovieDetail(id) {
-    this.UI.show(id);
+    this.Movie.find(id)
+      .then((res) => {
+        this.UI.show(res.data);
+      })
+      .catch((err) => {
+        throw new Error(Helpers.makeError(err));
+      });
   }
 
   initEvents() {
@@ -79,7 +84,7 @@ class App {
     document.addEventListener('click', (e) => {
       e.preventDefault();
 
-      if (e.target.classList['value'].match(/movie__link/g)) {
+      if (e.target.classList.value.match(/movie__link/g)) {
         this._handleMovieDetail(e.target.getAttribute('data-id'));
       }
     });

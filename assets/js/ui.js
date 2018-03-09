@@ -64,12 +64,11 @@ export default class UI {
   }
 
   /**
-   * show movie detail
-   * @params: id(Number)
+   * show movie details
+   * @param Object data
    */
-  show(id) {
-    const allMovies = this.popular.concat(this.discover);
-    const data = allMovies.find(val => val.id.toString() === id);
+  show(data) {
+    // Render details
   }
 
   /**

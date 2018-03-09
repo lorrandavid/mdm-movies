@@ -12,7 +12,7 @@ export default class Movie {
    * get movies list
    */
   list() {
-    this.listPage++;
+    this.listPage = this.listPage + 1;
     return axios.get(Helpers.makeURL('movie/popular', `&page=${this.listPage}`, this.key));
   }
 
@@ -20,25 +20,16 @@ export default class Movie {
    * get discover list
    */
   discover() {
-    this.discoverPage++;
+    this.discoverPage = this.discoverPage + 1;
     return axios.get(Helpers.makeURL('discover/movie', `&page=${this.discoverPage}&sort_by=popularity.desc`, this.key));
   }
 
   /**
    * find movies
-   * @params: arr(Array)
+   * @param Number id
    */
-  find(arr) {
-    const movies = [];
-    arr.forEach((id) => {
-      axios.get(`/movie/${id}`, '', this.key)
-        .then((res) => {
-          movies.push(res);
-        })
-        .catch((err) => {
-          throw new Error(Helpers.makeError(err));
-        });
-    });
+  find(id) {
+    return axios.get(Helpers.makeURL(`movie/${id}`, undefined, this.key));
   }
 
   /**
@@ -47,9 +38,5 @@ export default class Movie {
    */
   search(name) {
     return axios.get(Helpers.makeURL('search/movie', `&page=1&sort_by=popularity.desc&query=${name}`, this.key));
-  }
-
-  init() {
-    this.auth();
   }
 }

@@ -70,12 +70,12 @@ var App = function () {
   }, {
     key: '_handleSearch',
     value: function _handleSearch(e) {
-      var value = e.target.value;
+      var value = e.target.value.value;
+
       var movies = [];
 
       this.Movie.search(value).then(function (res) {
         movies.push(res);
-        console.log(movies);
       }).catch(function (err) {
         throw new Error(_helpers2.default.makeError(err));
       });
@@ -83,12 +83,18 @@ var App = function () {
   }, {
     key: '_handleMovieDetail',
     value: function _handleMovieDetail(id) {
-      this.UI.show(id);
+      var _this3 = this;
+
+      this.Movie.find(id).then(function (res) {
+        _this3.UI.show(res.data);
+      }).catch(function (err) {
+        throw new Error(_helpers2.default.makeError(err));
+      });
     }
   }, {
     key: 'initEvents',
     value: function initEvents() {
-      var _this3 = this;
+      var _this4 = this;
 
       var _UI$elements = this.UI.elements(),
           $btnLoadPopular = _UI$elements.$btnLoadPopular,
@@ -96,35 +102,35 @@ var App = function () {
           $inputSearch = _UI$elements.$inputSearch;
 
       $btnLoadPopular.addEventListener('click', function (e) {
-        _this3._handleLoadPopular(e);
+        _this4._handleLoadPopular(e);
       });
 
       $btnLoadDiscover.addEventListener('click', function (e) {
-        _this3._handleLoadDiscover(e);
+        _this4._handleLoadDiscover(e);
       });
 
       $inputSearch.addEventListener('keyup', function (e) {
-        _this3._handleSearch(e);
+        _this4._handleSearch(e);
       });
 
       document.addEventListener('click', function (e) {
         e.preventDefault();
 
-        if (e.target.classList['value'].match(/movie__link/g)) {
-          _this3._handleMovieDetail(e.target.getAttribute('data-id'));
+        if (e.target.classList.value.match(/movie__link/g)) {
+          _this4._handleMovieDetail(e.target.getAttribute('data-id'));
         }
       });
     }
   }, {
     key: 'init',
     value: function init() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.initEvents();
 
       _axios2.default.all([this.Movie.list(), this.Movie.discover()]).then(_axios2.default.spread(function (list, discover) {
-        _this4.UI.listPopular(list.data.results);
-        _this4.UI.listDiscover(discover.data.results);
+        _this5.UI.listPopular(list.data.results);
+        _this5.UI.listDiscover(discover.data.results);
       })).catch(function (err) {
         throw new Error(_helpers2.default.makeError(err));
       });
@@ -225,7 +231,7 @@ var Movie = function () {
   _createClass(Movie, [{
     key: 'list',
     value: function list() {
-      this.listPage++;
+      this.listPage = this.listPage + 1;
       return _axios2.default.get(_helpers2.default.makeURL('movie/popular', '&page=' + this.listPage, this.key));
     }
 
@@ -236,28 +242,19 @@ var Movie = function () {
   }, {
     key: 'discover',
     value: function discover() {
-      this.discoverPage++;
+      this.discoverPage = this.discoverPage + 1;
       return _axios2.default.get(_helpers2.default.makeURL('discover/movie', '&page=' + this.discoverPage + '&sort_by=popularity.desc', this.key));
     }
 
     /**
      * find movies
-     * @params: arr(Array)
+     * @param Number id
      */
 
   }, {
     key: 'find',
-    value: function find(arr) {
-      var _this = this;
-
-      var movies = [];
-      arr.forEach(function (id) {
-        _axios2.default.get('/movie/' + id, '', _this.key).then(function (res) {
-          movies.push(res);
-        }).catch(function (err) {
-          throw new Error(_helpers2.default.makeError(err));
-        });
-      });
+    value: function find(id) {
+      return _axios2.default.get(_helpers2.default.makeURL('movie/' + id, undefined, this.key));
     }
 
     /**
@@ -269,11 +266,6 @@ var Movie = function () {
     key: 'search',
     value: function search(name) {
       return _axios2.default.get(_helpers2.default.makeURL('search/movie', '&page=1&sort_by=popularity.desc&query=' + name, this.key));
-    }
-  }, {
-    key: 'init',
-    value: function init() {
-      this.auth();
     }
   }]);
 
@@ -366,18 +358,15 @@ var UI = function () {
     }
 
     /**
-     * show movie detail
-     * @params: id(Number)
+     * show movie details
+     * @param Object data
      */
 
   }, {
     key: 'show',
-    value: function show(id) {
-      var allMovies = this.popular.concat(this.discover);
-      var data = allMovies.find(function (val) {
-        return val.id.toString() === id;
-      });
-    }
+    value: function show(data) {}
+    // Render details
+
 
     /**
      * render discover movies
