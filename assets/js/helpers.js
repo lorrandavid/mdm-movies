@@ -1,37 +1,39 @@
-export default {
+export default class Helpers {
   /**
-   * make api url
-   * @params: query(String), opts(String), apiKey(String)
+   * Make api url
+   * @param {string} query
+   * @param {string} opts
+   * @param {string} apiKey
    */
-  makeURL(query, opts = '', apiKey) {
+  static makeURL(query, opts = '', apiKey) {
     return `https://api.themoviedb.org/3/${query}?api_key=${apiKey}${opts}`;
-  },
+  }
 
   /**
-   * make error
-   * @params: err(String)
+   * Make error
+   * @param {string} err
    */
-  makeError(err) {
+  static makeError(err) {
     return `Something unexpected happened: ${err}`;
-  },
+  }
 
   /**
-   * trucate string after 140 char
-   * @params: value(String)
+   * Trucate string after 140 char
+   * @param {string} value
    */
-  truncate(value) {
-    if(value.length < 140) {
-      return;
+  static truncate(value) {
+    if (value.length < 140) {
+      return false;
     }
 
     return `${value.substring(0, 137)}...`;
-  },
+  }
 
   /**
-   * calculate rating on base 5
-   * @params: value(Number)
+   * Calculate rating on base 5
+   * @param {number} value
    */
-  calculateRating(value) {
-    return (value * 5)/10;
+  static calculateRating(value) {
+    return (value * 5) / 10;
   }
-};
+}

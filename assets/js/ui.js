@@ -12,33 +12,39 @@ export default class UI {
   }
 
   /**
-   * ui elements
+   * UI elements
    */
-  elements() {
+  static elements() {
     return {
       $btnLoadPopular: document.querySelector('[data-js="loadPopular"]'),
       $btnLoadDiscover: document.querySelector('[data-js="loadDiscover"]'),
-      $inputSearch: document.querySelector('[data-js="inputSearch"]')
+      $inputSearch: document.querySelector('[data-js="inputSearch"]'),
     };
   }
 
   /**
-   * render template movie
+   * Render movie card
+   * @param {object} data
    */
-  render(data) {
-    const { id, poster_path, title, vote_average } = data;
+  static render(data) {
+    const {
+      id,
+      poster_path: posterPath,
+      title,
+      vote_average: voteAverage,
+    } = data;
 
     return `
       <div class="movie">
         <a href="#" class="movie__link" data-id="${id}"></a>
         <div class="movie-wrap">
           <div class="movie-header">
-            <img src="https://image.tmdb.org/t/p/w500${poster_path}" alt="${title}" class="movie-header__img">
+            <img src="https://image.tmdb.org/t/p/w500${posterPath}" alt="${title}" class="movie-header__img">
           </div>
           <div class="movie-content">
             <h3 class="movie-header__title">${title}</h3>
             <div class="movie-content__rating">
-              <span class="movie-header__rating__star"></span><span class="movie-header__rating__text">${Helpers.calculateRating(vote_average)}</span>
+              <span class="movie-header__rating__star"></span><span class="movie-header__rating__text">${Helpers.calculateRating(voteAverage)}</span>
             </div>
           </div>
         </div>
@@ -47,8 +53,8 @@ export default class UI {
   }
 
   /**
-   * render list movies
-   * @params: movies(Array)
+   * Render popular list
+   * @param {array} movies
    */
   listPopular(movies) {
     if (typeof movies !== 'undefined') {
@@ -59,21 +65,13 @@ export default class UI {
     const moviesToRender = this.popular.slice(this.popularStart, this.popularOffset);
 
     moviesToRender.forEach((movie) => {
-      $grid.insertAdjacentHTML('beforeend', this.render(movie));
+      $grid.insertAdjacentHTML('beforeend', UI.render(movie));
     });
   }
 
   /**
-   * show movie details
-   * @param Object data
-   */
-  show(data) {
-    // Render details
-  }
-
-  /**
-   * render discover movies
-   * @params: movies(Array)
+   * Render disconver list
+   * @param {array} movies
    */
   listDiscover(movies) {
     if (typeof movies !== 'undefined') {
@@ -84,12 +82,12 @@ export default class UI {
     const moviesToRender = this.discover.slice(this.discoverStart, this.discoverOffset);
 
     moviesToRender.forEach((movie) => {
-      $grid.insertAdjacentHTML('beforeend', this.render(movie));
+      $grid.insertAdjacentHTML('beforeend', UI.render(movie));
     });
   }
 
   /**
-   * load more popular
+   * Load more popular
    */
   loadPopular() {
     this.popularStart += 5;
@@ -97,10 +95,17 @@ export default class UI {
   }
 
   /**
-   * load more discover
+   * Load more discover
    */
   loadDiscover() {
     this.discoverStart += 5;
     this.discoverOffset += 5;
   }
+
+  /**
+   * Show movie details
+   * @param {object} data
+   */
+  // show(data) {
+  // }
 }

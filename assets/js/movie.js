@@ -9,7 +9,7 @@ export default class Movie {
   }
 
   /**
-   * get movies list
+   * List movies
    */
   list() {
     this.listPage = this.listPage + 1;
@@ -17,7 +17,7 @@ export default class Movie {
   }
 
   /**
-   * get discover list
+   * List dicover
    */
   discover() {
     this.discoverPage = this.discoverPage + 1;
@@ -25,16 +25,16 @@ export default class Movie {
   }
 
   /**
-   * find movies
-   * @param Number id
+   * Find specific movie
+   * @param {number} id
    */
   find(id) {
     return axios.get(Helpers.makeURL(`movie/${id}`, undefined, this.key));
   }
 
   /**
-   * search movies
-   * @params: name(String)
+   * Search for movie
+   * @param {string} name
    */
   search(name) {
     return axios.get(Helpers.makeURL('search/movie', `&page=1&sort_by=popularity.desc&query=${name}`, this.key));

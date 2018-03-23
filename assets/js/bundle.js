@@ -31,9 +31,15 @@ var App = function () {
     this.UI = new _ui2.default();
   }
 
+  /**
+   * Handle load more popular
+   * @param {event} e
+   */
+
+
   _createClass(App, [{
-    key: '_handleLoadPopular',
-    value: function _handleLoadPopular(e) {
+    key: 'handleLoadPopular',
+    value: function handleLoadPopular(e) {
       var _this = this;
 
       e.preventDefault();
@@ -49,9 +55,15 @@ var App = function () {
         this.UI.listPopular();
       }
     }
+
+    /**
+     * Handle load more discover
+     * @param {event} e
+     */
+
   }, {
-    key: '_handleLoadDiscover',
-    value: function _handleLoadDiscover(e) {
+    key: 'handleLoadDiscover',
+    value: function handleLoadDiscover(e) {
       var _this2 = this;
 
       e.preventDefault();
@@ -67,9 +79,15 @@ var App = function () {
         this.UI.listDiscover();
       }
     }
+
+    /**
+     * Handle search
+     * @param {event} e
+     */
+
   }, {
-    key: '_handleSearch',
-    value: function _handleSearch(e) {
+    key: 'handleSearch',
+    value: function handleSearch(e) {
       var value = e.target.value.value;
 
       var movies = [];
@@ -80,9 +98,15 @@ var App = function () {
         throw new Error(_helpers2.default.makeError(err));
       });
     }
+
+    /**
+     * Handle movie detail
+     * @param {number} id
+     */
+
   }, {
-    key: '_handleMovieDetail',
-    value: function _handleMovieDetail(id) {
+    key: 'handleMovieDetail',
+    value: function handleMovieDetail(id) {
       var _this3 = this;
 
       this.Movie.find(id).then(function (res) {
@@ -91,36 +115,46 @@ var App = function () {
         throw new Error(_helpers2.default.makeError(err));
       });
     }
+
+    /**
+     * Init events
+     */
+
   }, {
     key: 'initEvents',
     value: function initEvents() {
       var _this4 = this;
 
-      var _UI$elements = this.UI.elements(),
+      var _UI$elements = _ui2.default.elements(),
           $btnLoadPopular = _UI$elements.$btnLoadPopular,
           $btnLoadDiscover = _UI$elements.$btnLoadDiscover,
           $inputSearch = _UI$elements.$inputSearch;
 
       $btnLoadPopular.addEventListener('click', function (e) {
-        _this4._handleLoadPopular(e);
+        _this4.handleLoadPopular(e);
       });
 
       $btnLoadDiscover.addEventListener('click', function (e) {
-        _this4._handleLoadDiscover(e);
+        _this4.handleLoadDiscover(e);
       });
 
       $inputSearch.addEventListener('keyup', function (e) {
-        _this4._handleSearch(e);
+        _this4.handleSearch(e);
       });
 
       document.addEventListener('click', function (e) {
         e.preventDefault();
 
         if (e.target.classList.value.match(/movie__link/g)) {
-          _this4._handleMovieDetail(e.target.getAttribute('data-id'));
+          _this4.handleMovieDetail(e.target.getAttribute('data-id'));
         }
       });
     }
+
+    /**
+     * Init app
+     */
+
   }, {
     key: 'init',
     value: function init() {
@@ -149,49 +183,74 @@ app.init();
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = {
-  /**
-   * make api url
-   * @params: query(String), opts(String), apiKey(String)
-   */
-  makeURL: function makeURL(query) {
-    var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-    var apiKey = arguments[2];
 
-    return 'https://api.themoviedb.org/3/' + query + '?api_key=' + apiKey + opts;
-  },
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  /**
-   * make error
-   * @params: err(String)
-   */
-  makeError: function makeError(err) {
-    return 'Something unexpected happened: ' + err;
-  },
+var Helpers = function () {
+  function Helpers() {
+    _classCallCheck(this, Helpers);
+  }
 
+  _createClass(Helpers, null, [{
+    key: 'makeURL',
 
-  /**
-   * trucate string after 140 char
-   * @params: value(String)
-   */
-  truncate: function truncate(value) {
-    if (value.length < 140) {
-      return;
+    /**
+     * Make api url
+     * @param {string} query
+     * @param {string} opts
+     * @param {string} apiKey
+     */
+    value: function makeURL(query) {
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+      var apiKey = arguments[2];
+
+      return 'https://api.themoviedb.org/3/' + query + '?api_key=' + apiKey + opts;
     }
 
-    return value.substring(0, 137) + '...';
-  },
+    /**
+     * Make error
+     * @param {string} err
+     */
 
+  }, {
+    key: 'makeError',
+    value: function makeError(err) {
+      return 'Something unexpected happened: ' + err;
+    }
 
-  /**
-   * calculate rating on base 5
-   * @params: value(Number)
-   */
-  calculateRating: function calculateRating(value) {
-    return value * 5 / 10;
-  }
-};
+    /**
+     * Trucate string after 140 char
+     * @param {string} value
+     */
+
+  }, {
+    key: 'truncate',
+    value: function truncate(value) {
+      if (value.length < 140) {
+        return false;
+      }
+
+      return value.substring(0, 137) + '...';
+    }
+
+    /**
+     * Calculate rating on base 5
+     * @param {number} value
+     */
+
+  }, {
+    key: 'calculateRating',
+    value: function calculateRating(value) {
+      return value * 5 / 10;
+    }
+  }]);
+
+  return Helpers;
+}();
+
+exports.default = Helpers;
 
 },{}],3:[function(require,module,exports){
 'use strict';
@@ -224,7 +283,7 @@ var Movie = function () {
   }
 
   /**
-   * get movies list
+   * List movies
    */
 
 
@@ -236,7 +295,7 @@ var Movie = function () {
     }
 
     /**
-     * get discover list
+     * List dicover
      */
 
   }, {
@@ -247,8 +306,8 @@ var Movie = function () {
     }
 
     /**
-     * find movies
-     * @param Number id
+     * Find specific movie
+     * @param {number} id
      */
 
   }, {
@@ -258,8 +317,8 @@ var Movie = function () {
     }
 
     /**
-     * search movies
-     * @params: name(String)
+     * Search for movie
+     * @param {string} name
      */
 
   }, {
@@ -305,46 +364,19 @@ var UI = function () {
   }
 
   /**
-   * ui elements
+   * UI elements
    */
 
 
   _createClass(UI, [{
-    key: 'elements',
-    value: function elements() {
-      return {
-        $btnLoadPopular: document.querySelector('[data-js="loadPopular"]'),
-        $btnLoadDiscover: document.querySelector('[data-js="loadDiscover"]'),
-        $inputSearch: document.querySelector('[data-js="inputSearch"]')
-      };
-    }
-
-    /**
-     * render template movie
-     */
-
-  }, {
-    key: 'render',
-    value: function render(data) {
-      var id = data.id,
-          poster_path = data.poster_path,
-          title = data.title,
-          vote_average = data.vote_average;
-
-
-      return '\n      <div class="movie">\n        <a href="#" class="movie__link" data-id="' + id + '"></a>\n        <div class="movie-wrap">\n          <div class="movie-header">\n            <img src="https://image.tmdb.org/t/p/w500' + poster_path + '" alt="' + title + '" class="movie-header__img">\n          </div>\n          <div class="movie-content">\n            <h3 class="movie-header__title">' + title + '</h3>\n            <div class="movie-content__rating">\n              <span class="movie-header__rating__star"></span><span class="movie-header__rating__text">' + _helpers2.default.calculateRating(vote_average) + '</span>\n            </div>\n          </div>\n        </div>\n      </div>\n    ';
-    }
-
-    /**
-     * render list movies
-     * @params: movies(Array)
-     */
-
-  }, {
     key: 'listPopular',
-    value: function listPopular(movies) {
-      var _this = this;
 
+
+    /**
+     * Render popular list
+     * @param {array} movies
+     */
+    value: function listPopular(movies) {
       if (typeof movies !== 'undefined') {
         this.popular = this.popular.concat(movies);
       }
@@ -353,31 +385,18 @@ var UI = function () {
       var moviesToRender = this.popular.slice(this.popularStart, this.popularOffset);
 
       moviesToRender.forEach(function (movie) {
-        $grid.insertAdjacentHTML('beforeend', _this.render(movie));
+        $grid.insertAdjacentHTML('beforeend', UI.render(movie));
       });
     }
 
     /**
-     * show movie details
-     * @param Object data
-     */
-
-  }, {
-    key: 'show',
-    value: function show(data) {}
-    // Render details
-
-
-    /**
-     * render discover movies
-     * @params: movies(Array)
+     * Render disconver list
+     * @param {array} movies
      */
 
   }, {
     key: 'listDiscover',
     value: function listDiscover(movies) {
-      var _this2 = this;
-
       if (typeof movies !== 'undefined') {
         this.discover = this.discover.concat(movies);
       }
@@ -386,12 +405,12 @@ var UI = function () {
       var moviesToRender = this.discover.slice(this.discoverStart, this.discoverOffset);
 
       moviesToRender.forEach(function (movie) {
-        $grid.insertAdjacentHTML('beforeend', _this2.render(movie));
+        $grid.insertAdjacentHTML('beforeend', UI.render(movie));
       });
     }
 
     /**
-     * load more popular
+     * Load more popular
      */
 
   }, {
@@ -402,7 +421,7 @@ var UI = function () {
     }
 
     /**
-     * load more discover
+     * Load more discover
      */
 
   }, {
@@ -410,6 +429,40 @@ var UI = function () {
     value: function loadDiscover() {
       this.discoverStart += 5;
       this.discoverOffset += 5;
+    }
+
+    /**
+     * Show movie details
+     * @param {object} data
+     */
+    // show(data) {
+    // }
+
+  }], [{
+    key: 'elements',
+    value: function elements() {
+      return {
+        $btnLoadPopular: document.querySelector('[data-js="loadPopular"]'),
+        $btnLoadDiscover: document.querySelector('[data-js="loadDiscover"]'),
+        $inputSearch: document.querySelector('[data-js="inputSearch"]')
+      };
+    }
+
+    /**
+     * Render movie card
+     * @param {object} data
+     */
+
+  }, {
+    key: 'render',
+    value: function render(data) {
+      var id = data.id,
+          posterPath = data.poster_path,
+          title = data.title,
+          voteAverage = data.vote_average;
+
+
+      return '\n      <div class="movie">\n        <a href="#" class="movie__link" data-id="' + id + '"></a>\n        <div class="movie-wrap">\n          <div class="movie-header">\n            <img src="https://image.tmdb.org/t/p/w500' + posterPath + '" alt="' + title + '" class="movie-header__img">\n          </div>\n          <div class="movie-content">\n            <h3 class="movie-header__title">' + title + '</h3>\n            <div class="movie-content__rating">\n              <span class="movie-header__rating__star"></span><span class="movie-header__rating__text">' + _helpers2.default.calculateRating(voteAverage) + '</span>\n            </div>\n          </div>\n        </div>\n      </div>\n    ';
     }
   }]);
 

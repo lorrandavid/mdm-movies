@@ -9,7 +9,11 @@ class App {
     this.UI = new UI();
   }
 
-  _handleLoadPopular(e) {
+  /**
+   * Handle load more popular
+   * @param {event} e
+   */
+  handleLoadPopular(e) {
     e.preventDefault();
     this.UI.loadPopular();
 
@@ -26,7 +30,11 @@ class App {
     }
   }
 
-  _handleLoadDiscover(e) {
+  /**
+   * Handle load more discover
+   * @param {event} e
+   */
+  handleLoadDiscover(e) {
     e.preventDefault();
     this.UI.loadDiscover();
 
@@ -43,7 +51,11 @@ class App {
     }
   }
 
-  _handleSearch(e) {
+  /**
+   * Handle search
+   * @param {event} e
+   */
+  handleSearch(e) {
     const { value } = e.target.value;
     const movies = [];
 
@@ -56,7 +68,11 @@ class App {
       });
   }
 
-  _handleMovieDetail(id) {
+  /**
+   * Handle movie detail
+   * @param {number} id
+   */
+  handleMovieDetail(id) {
     this.Movie.find(id)
       .then((res) => {
         this.UI.show(res.data);
@@ -66,30 +82,36 @@ class App {
       });
   }
 
+  /**
+   * Init events
+   */
   initEvents() {
-    const { $btnLoadPopular, $btnLoadDiscover, $inputSearch } = this.UI.elements();
+    const { $btnLoadPopular, $btnLoadDiscover, $inputSearch } = UI.elements();
 
     $btnLoadPopular.addEventListener('click', (e) => {
-      this._handleLoadPopular(e)
+      this.handleLoadPopular(e);
     });
 
     $btnLoadDiscover.addEventListener('click', (e) => {
-      this._handleLoadDiscover(e)
+      this.handleLoadDiscover(e);
     });
 
     $inputSearch.addEventListener('keyup', (e) => {
-      this._handleSearch(e)
+      this.handleSearch(e);
     });
 
     document.addEventListener('click', (e) => {
       e.preventDefault();
 
       if (e.target.classList.value.match(/movie__link/g)) {
-        this._handleMovieDetail(e.target.getAttribute('data-id'));
+        this.handleMovieDetail(e.target.getAttribute('data-id'));
       }
     });
   }
 
+  /**
+   * Init app
+   */
   init() {
     this.initEvents();
 
