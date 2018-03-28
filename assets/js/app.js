@@ -70,16 +70,14 @@ class App {
 
   /**
    * Handle movie detail
-   * @param {number} id
+   * @param {string} id
    */
   handleMovieDetail(id) {
-    this.Movie.find(id)
-      .then((res) => {
-        this.UI.show(res.data);
-      })
-      .catch((err) => {
-        throw new Error(Helpers.makeError(err));
-      });
+    try {
+      this.UI.show(+id);
+    } catch (err) {
+      throw new Error(Helpers.makeError(err));
+    }
   }
 
   /**

@@ -2,6 +2,9 @@ import Helpers from './helpers';
 
 export default class UI {
   constructor() {
+    this.moviesIdx = [];
+    this.movies = [];
+
     this.popular = [];
     this.popularStart = 0;
     this.popularOffset = 5;
@@ -59,6 +62,7 @@ export default class UI {
   listPopular(movies) {
     if (typeof movies !== 'undefined') {
       this.popular = this.popular.concat(movies);
+      this.movies = Helpers.uniqArrayObj(this.movies.concat(movies), 'id');
     }
 
     const $grid = document.querySelector('[data-js="popularGrid"');
@@ -70,12 +74,13 @@ export default class UI {
   }
 
   /**
-   * Render disconver list
+   * Render discover list
    * @param {array} movies
    */
   listDiscover(movies) {
     if (typeof movies !== 'undefined') {
       this.discover = this.discover.concat(movies);
+      this.movies = Helpers.uniqArrayObj(this.movies.concat(movies), 'id');
     }
 
     const $grid = document.querySelector('[data-js="discoverGrid"');
@@ -104,8 +109,10 @@ export default class UI {
 
   /**
    * Show movie details
-   * @param {object} data
+   * @param {string} id
    */
-  // show(data) {
-  // }
+  show(id) {
+    const movie = this.movies.filter(obj => obj.id === id)[0];
+    console.log(movie);
+  }
 }

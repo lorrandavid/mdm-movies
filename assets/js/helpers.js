@@ -36,4 +36,15 @@ export default class Helpers {
   static calculateRating(value) {
     return (value * 5) / 10;
   }
+
+  /**
+   * Make array unique based on object properties
+   * @param {array} array
+   * @param {string} prop
+   */
+  static uniqArrayObj(array, prop) {
+    return array.filter((obj, index, arr) => {
+      return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === index;
+    });
+  }
 }

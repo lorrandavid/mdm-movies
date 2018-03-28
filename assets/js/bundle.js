@@ -101,19 +101,17 @@ var App = function () {
 
     /**
      * Handle movie detail
-     * @param {number} id
+     * @param {string} id
      */
 
   }, {
     key: 'handleMovieDetail',
     value: function handleMovieDetail(id) {
-      var _this3 = this;
-
-      this.Movie.find(id).then(function (res) {
-        _this3.UI.show(res.data);
-      }).catch(function (err) {
+      try {
+        this.UI.show(+id);
+      } catch (err) {
         throw new Error(_helpers2.default.makeError(err));
-      });
+      }
     }
 
     /**
@@ -123,7 +121,7 @@ var App = function () {
   }, {
     key: 'initEvents',
     value: function initEvents() {
-      var _this4 = this;
+      var _this3 = this;
 
       var _UI$elements = _ui2.default.elements(),
           $btnLoadPopular = _UI$elements.$btnLoadPopular,
@@ -131,22 +129,22 @@ var App = function () {
           $inputSearch = _UI$elements.$inputSearch;
 
       $btnLoadPopular.addEventListener('click', function (e) {
-        _this4.handleLoadPopular(e);
+        _this3.handleLoadPopular(e);
       });
 
       $btnLoadDiscover.addEventListener('click', function (e) {
-        _this4.handleLoadDiscover(e);
+        _this3.handleLoadDiscover(e);
       });
 
       $inputSearch.addEventListener('keyup', function (e) {
-        _this4.handleSearch(e);
+        _this3.handleSearch(e);
       });
 
       document.addEventListener('click', function (e) {
         e.preventDefault();
 
         if (e.target.classList.value.match(/movie__link/g)) {
-          _this4.handleMovieDetail(e.target.getAttribute('data-id'));
+          _this3.handleMovieDetail(e.target.getAttribute('data-id'));
         }
       });
     }
@@ -158,13 +156,13 @@ var App = function () {
   }, {
     key: 'init',
     value: function init() {
-      var _this5 = this;
+      var _this4 = this;
 
       this.initEvents();
 
       _axios2.default.all([this.Movie.list(), this.Movie.discover()]).then(_axios2.default.spread(function (list, discover) {
-        _this5.UI.listPopular(list.data.results);
-        _this5.UI.listDiscover(discover.data.results);
+        _this4.UI.listPopular(list.data.results);
+        _this4.UI.listDiscover(discover.data.results);
       })).catch(function (err) {
         throw new Error(_helpers2.default.makeError(err));
       });
@@ -244,6 +242,22 @@ var Helpers = function () {
     key: 'calculateRating',
     value: function calculateRating(value) {
       return value * 5 / 10;
+    }
+
+    /**
+     * Make array unique based on object properties
+     * @param {array} array
+     * @param {string} prop
+     */
+
+  }, {
+    key: 'uniqArrayObj',
+    value: function uniqArrayObj(array, prop) {
+      return array.filter(function (obj, index, arr) {
+        return arr.map(function (mapObj) {
+          return mapObj[prop];
+        }).indexOf(obj[prop]) === index;
+      });
     }
   }]);
 
@@ -354,6 +368,9 @@ var UI = function () {
   function UI() {
     _classCallCheck(this, UI);
 
+    this.moviesIdx = [];
+    this.movies = [];
+
     this.popular = [];
     this.popularStart = 0;
     this.popularOffset = 5;
@@ -379,6 +396,7 @@ var UI = function () {
     value: function listPopular(movies) {
       if (typeof movies !== 'undefined') {
         this.popular = this.popular.concat(movies);
+        this.movies = _helpers2.default.uniqArrayObj(this.movies.concat(movies), 'id');
       }
 
       var $grid = document.querySelector('[data-js="popularGrid"');
@@ -390,7 +408,7 @@ var UI = function () {
     }
 
     /**
-     * Render disconver list
+     * Render discover list
      * @param {array} movies
      */
 
@@ -399,6 +417,7 @@ var UI = function () {
     value: function listDiscover(movies) {
       if (typeof movies !== 'undefined') {
         this.discover = this.discover.concat(movies);
+        this.movies = _helpers2.default.uniqArrayObj(this.movies.concat(movies), 'id');
       }
 
       var $grid = document.querySelector('[data-js="discoverGrid"');
@@ -433,11 +452,17 @@ var UI = function () {
 
     /**
      * Show movie details
-     * @param {object} data
+     * @param {string} id
      */
-    // show(data) {
-    // }
 
+  }, {
+    key: 'show',
+    value: function show(id) {
+      var movie = this.movies.filter(function (obj) {
+        return obj.id === id;
+      })[0];
+      console.log(movie);
+    }
   }], [{
     key: 'elements',
     value: function elements() {
