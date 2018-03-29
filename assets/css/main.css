@@ -1,5 +1,4 @@
 @import '../../node_modules/reset-css/reset.css';
-
 body {
   font-family: 'Nunito', sans-serif;
   font-size: 14px;
@@ -37,7 +36,7 @@ body {
   width: 100%;
   position: relative;
   box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
   border-radius: 6px;
   margin-bottom: 16px;
   height: 265px;
@@ -75,9 +74,9 @@ body {
   margin-left: .9em;
   margin-right: .9em;
   margin-bottom: 1.2em;
-  border-right:  .3em solid transparent;
-  border-bottom: .7em  solid #FC0;
-  border-left:   .3em solid transparent;
+  border-right: .3em solid transparent;
+  border-bottom: .7em solid #FC0;
+  border-left: .3em solid transparent;
   font-size: 10px;
 }
 
@@ -96,9 +95,9 @@ body {
   position: absolute;
   top: .6em;
   left: -1em;
-  border-right:  1em solid transparent;
-  border-bottom: .7em  solid #FC0;
-  border-left:   1em solid transparent;
+  border-right: 1em solid transparent;
+  border-bottom: .7em solid #FC0;
+  border-left: 1em solid transparent;
   transform: rotate(-35deg);
 }
 
@@ -123,47 +122,134 @@ body {
   font-size: 18px;
 }
 
-.movie-details {
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 9;
-  width: 40%;
-  max-width: 500px;
-  height: 100%;
-  overflow: auto;
-  overflow-x: hidden;
-  box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
-  background: #ffffff;
-}
-
-.movie-details__content {
-  position: relative;
-  z-index: 1;
-}
-
-.detail-open {
-  position: relative;
-}
-
-.detail-open:before {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  content: '';
-  z-index: 9;
-}
-
 .movie-detail {
   position: absolute;
   top: 0;
   right: 0;
-  width: 35%;
+  width: 100%;
   height: 100%;
   min-height: 100vh;
-  background: #fff;
+  background: #111a1f;
   z-index: 99;
+}
+
+.movie-detail article {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.movie-detail .movie-detail__content {
+  position: relative;
+  z-index: 99;
+}
+
+.movie-detail .movie-detail__content__title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.movie-detail .movie-detail__content-info__list {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.movie-detail .movie-detail__content-info__item {
+  display: inline-block;
+  color: rgba(255, 255, 255, .8);
+  position: relative;
+}
+
+.movie-detail .movie-detail__content-info__item:not(:last-child) {
+  margin-right: 56px;
+}
+
+.movie-detail .movie-detail__content-info__item:not(:last-child):after {
+  position: absolute;
+  top: 50%;
+  right: -31px;
+  content: '';
+  height: 4px;
+  width: 4px;
+  background: rgba(255, 255, 255, .3);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.movie-detail .movie-detail__content-info__item:first-child {
+  display: inline-flex;
+  align-items: center;
+}
+
+.movie-detail .movie-detail__content-excerpt__text {
+  line-height: 1.45;
+  color: rgba(255, 255, 255, .9);
+}
+
+.movie-detail .movie-detail__content-info__rating-star {
+  position: relative;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: .9em;
+  margin-right: .9em;
+  margin-bottom: 1.2em;
+  border-right: .3em solid transparent;
+  border-bottom: .8em solid #FC0;
+  border-left: .3em solid transparent;
+  font-size: 9px;
+}
+
+.movie-detail .movie-detail__content-info__rating-text {
+  font-weight: 700;
+  margin-left: 4px;
+  color: rgba(255, 255, 255, .8);
+}
+
+.movie-detail .movie-detail__content-info__rating-star:before,
+.movie-detail .movie-detail__content-info__rating-star:after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: .6em;
+  left: -1em;
+  border-right: 1em solid transparent;
+  border-bottom: .7em solid #FC0;
+  border-left: 1em solid transparent;
+  transform: rotate(-35deg);
+}
+
+.movie-detail .movie-detail__content-info__rating-star:after {
+  transform: rotate(35deg);
+}
+
+.movie-detail .movie-detail__background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.movie-detail .movie-detail__background__img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  opacity: .1;
+}
+
+.badge {
+  padding: 4px 16px;
+}
+
+.badge--outline {
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: 6px;
 }
