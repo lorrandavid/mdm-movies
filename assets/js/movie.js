@@ -39,4 +39,12 @@ export default class Movie {
   search(name) {
     return axios.get(Helpers.makeURL('search/movie', `&page=1&sort_by=popularity.desc&query=${name}`, this.key));
   }
+
+  /**
+   * Get movie certifications
+   * @param {number} id
+   */
+  certification(id) {
+    return axios.get(Helpers.makeURL(`movie/${id}/release_dates`, undefined, this.key));
+  }
 }

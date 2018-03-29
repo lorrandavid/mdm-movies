@@ -107,11 +107,13 @@ var App = function () {
   }, {
     key: 'handleMovieDetail',
     value: function handleMovieDetail(id) {
-      try {
-        this.UI.show(+id);
-      } catch (err) {
+      var _this3 = this;
+
+      this.Movie.certification(id).then(function (res) {
+        _this3.UI.show(res.data);
+      }).catch(function (err) {
         throw new Error(_helpers2.default.makeError(err));
-      }
+      });
     }
 
     /**
@@ -121,7 +123,7 @@ var App = function () {
   }, {
     key: 'initEvents',
     value: function initEvents() {
-      var _this3 = this;
+      var _this4 = this;
 
       var _UI$elements = _ui2.default.elements(),
           $btnLoadPopular = _UI$elements.$btnLoadPopular,
@@ -129,22 +131,22 @@ var App = function () {
           $inputSearch = _UI$elements.$inputSearch;
 
       $btnLoadPopular.addEventListener('click', function (e) {
-        _this3.handleLoadPopular(e);
+        _this4.handleLoadPopular(e);
       });
 
       $btnLoadDiscover.addEventListener('click', function (e) {
-        _this3.handleLoadDiscover(e);
+        _this4.handleLoadDiscover(e);
       });
 
       $inputSearch.addEventListener('keyup', function (e) {
-        _this3.handleSearch(e);
+        _this4.handleSearch(e);
       });
 
       document.addEventListener('click', function (e) {
         e.preventDefault();
 
         if (e.target.classList.value.match(/movie__link/g)) {
-          _this3.handleMovieDetail(e.target.getAttribute('data-id'));
+          _this4.handleMovieDetail(e.target.getAttribute('data-id'));
         }
       });
     }
@@ -156,13 +158,13 @@ var App = function () {
   }, {
     key: 'init',
     value: function init() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.initEvents();
 
       _axios2.default.all([this.Movie.list(), this.Movie.discover()]).then(_axios2.default.spread(function (list, discover) {
-        _this4.UI.listPopular(list.data.results);
-        _this4.UI.listDiscover(discover.data.results);
+        _this5.UI.listPopular(list.data.results);
+        _this5.UI.listDiscover(discover.data.results);
       })).catch(function (err) {
         throw new Error(_helpers2.default.makeError(err));
       });
@@ -340,6 +342,17 @@ var Movie = function () {
     value: function search(name) {
       return _axios2.default.get(_helpers2.default.makeURL('search/movie', '&page=1&sort_by=popularity.desc&query=' + name, this.key));
     }
+
+    /**
+     * Get movie certifications
+     * @param {number} id
+     */
+
+  }, {
+    key: 'certification',
+    value: function certification(id) {
+      return _axios2.default.get(_helpers2.default.makeURL('movie/' + id + '/release_dates', undefined, this.key));
+    }
   }]);
 
   return Movie;
@@ -452,16 +465,25 @@ var UI = function () {
 
     /**
      * Show movie details
-     * @param {string} id
+     * @param {object} data
      */
 
   }, {
     key: 'show',
-    value: function show(id) {
-      var movie = this.movies.filter(function (obj) {
-        return obj.id === id;
+    value: function show(data) {
+      var $page = document.querySelector('.page-wrapper');
+      var movieData = this.movies.filter(function (obj) {
+        return obj.id === data.id;
       })[0];
-      console.log(movie);
+      var movieCertification = data.results.filter(function (obj) {
+        return obj.iso_3166_1 === 'US';
+      });
+      var movie = {
+        movieData: movieData,
+        movieCertification: movieCertification
+      };
+
+      $page.insertAdjacentHTML('afterend', UI.renderDetail(movie));
     }
   }], [{
     key: 'elements',
@@ -488,6 +510,20 @@ var UI = function () {
 
 
       return '\n      <div class="movie">\n        <a href="#" class="movie__link" data-id="' + id + '"></a>\n        <div class="movie-wrap">\n          <div class="movie-header">\n            <img src="https://image.tmdb.org/t/p/w500' + posterPath + '" alt="' + title + '" class="movie-header__img">\n          </div>\n          <div class="movie-content">\n            <h3 class="movie-header__title">' + title + '</h3>\n            <div class="movie-content__rating">\n              <span class="movie-header__rating__star"></span><span class="movie-header__rating__text">' + _helpers2.default.calculateRating(voteAverage) + '</span>\n            </div>\n          </div>\n        </div>\n      </div>\n    ';
+    }
+  }, {
+    key: 'renderDetail',
+    value: function renderDetail(data) {
+      var _data$movieData = data.movieData,
+          title = _data$movieData.title,
+          overview = _data$movieData.overview,
+          backdrop = _data$movieData.backdrop_path,
+          voteAverage = _data$movieData.vote_average,
+          releaseDate = _data$movieData.release_date;
+      var certification = data.movieCertification[0].release_dates[0].certification;
+
+
+      return '\n      <div class="movie-detail">\n        <div class="movie-detail__background">\n          <img src="https://image.tmdb.org/t/p/w1280/' + backdrop + '" alt="" class="movie-detail__background__img">\n        </div>\n\n        <article>\n          <div class="movie-detail__content">\n            <h2 class="movie-detail__content__title">' + title + '</h2>\n            <div class="movie-detail__content-info">\n              <ul class="movie-detail__content-info__list">\n                <li class="movie-detail__content-info__item">\n                  <span class="movie-detail__content-info__rating-star"></span><span class="movie-detail__content-info__rating-text">' + _helpers2.default.calculateRating(voteAverage) + '</span>\n                </li>\n                <li class="movie-detail__content-info__item">\n                  Horror\n                </li>\n                <li class="movie-detail__content-info__item">\n                  ' + releaseDate + '\n                </li>\n                <li class="movie-detail__content-info__item">\n                  <span class="badge badge--outline">' + certification + '</span>\n                </li>\n              </ul>\n            </div>\n            <div class="movie-detail__content-excerpt">\n              <p class="movie-detail__content-excerpt__text">\n                ' + overview + '\n              </p>\n            </div>\n          </div>\n        </article>\n      </div>\n    ';
     }
   }]);
 

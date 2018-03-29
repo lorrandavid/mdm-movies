@@ -55,6 +55,52 @@ export default class UI {
     `;
   }
 
+  static renderDetail(data) {
+    const {
+      title,
+      overview,
+      backdrop_path: backdrop,
+      vote_average: voteAverage,
+      release_date: releaseDate,
+    } = data.movieData;
+    const { certification } = data.movieCertification[0].release_dates[0];
+
+    return `
+      <div class="movie-detail">
+        <div class="movie-detail__background">
+          <img src="https://image.tmdb.org/t/p/w1280/${backdrop}" alt="" class="movie-detail__background__img">
+        </div>
+
+        <article>
+          <div class="movie-detail__content">
+            <h2 class="movie-detail__content__title">${title}</h2>
+            <div class="movie-detail__content-info">
+              <ul class="movie-detail__content-info__list">
+                <li class="movie-detail__content-info__item">
+                  <span class="movie-detail__content-info__rating-star"></span><span class="movie-detail__content-info__rating-text">${Helpers.calculateRating(voteAverage)}</span>
+                </li>
+                <li class="movie-detail__content-info__item">
+                  Horror
+                </li>
+                <li class="movie-detail__content-info__item">
+                  ${releaseDate}
+                </li>
+                <li class="movie-detail__content-info__item">
+                  <span class="badge badge--outline">${certification}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="movie-detail__content-excerpt">
+              <p class="movie-detail__content-excerpt__text">
+                ${overview}
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+    `;
+  }
+
   /**
    * Render popular list
    * @param {array} movies
@@ -109,10 +155,17 @@ export default class UI {
 
   /**
    * Show movie details
-   * @param {string} id
+   * @param {object} data
    */
-  show(id) {
-    const movie = this.movies.filter(obj => obj.id === id)[0];
-    console.log(movie);
+  show(data) {
+    const $page = document.querySelector('.page-wrapper');
+    const movieData = this.movies.filter(obj => obj.id === data.id)[0];
+    const movieCertification = data.results.filter(obj => obj.iso_3166_1 === 'US');
+    const movie = {
+      movieData,
+      movieCertification,
+    };
+
+    $page.insertAdjacentHTML('afterend', UI.renderDetail(movie));
   }
 }

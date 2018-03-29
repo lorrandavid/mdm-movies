@@ -73,11 +73,13 @@ class App {
    * @param {string} id
    */
   handleMovieDetail(id) {
-    try {
-      this.UI.show(+id);
-    } catch (err) {
-      throw new Error(Helpers.makeError(err));
-    }
+    this.Movie.certification(id)
+      .then((res) => {
+        this.UI.show(res.data);
+      })
+      .catch((err) => {
+        throw new Error(Helpers.makeError(err));
+      });
   }
 
   /**

@@ -43,8 +43,7 @@ export default class Helpers {
    * @param {string} prop
    */
   static uniqArrayObj(array, prop) {
-    return array.filter((obj, index, arr) => {
-      return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === index;
-    });
+    return array
+      .filter((obj, index, arr) => arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === index);
   }
 }
