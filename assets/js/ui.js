@@ -91,7 +91,7 @@ export default class UI {
                   ${Helpers.formatGenres(genres)}
                 </li>
                 <li class="movie-detail__content-info__item">
-                  ${releaseDate}
+                  ${Helpers.formatYearRelease(releaseDate)}
                 </li>
                 <li class="movie-detail__content-info__item">
                   <span class="badge badge--outline">

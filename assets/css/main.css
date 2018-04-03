@@ -123,7 +123,7 @@ body {
 }
 
 .movie-detail {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   width: 100%;
@@ -246,7 +246,7 @@ body {
   top: 0;
   left: 0;
   content: '';
-  background: radial-gradient(rgba(7, 10, 12, 0) 0%, rgba(7, 10, 12, 0.7) 100%);
+  background: radial-gradient(rgba(17, 26, 31, 0) 50%, rgb(17, 26, 31) 80%);
 }
 
 .movie-detail .movie-detail__background__img {

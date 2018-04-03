@@ -107,13 +107,14 @@ class App {
     document.addEventListener('click', (e) => {
       e.preventDefault();
 
-      if (e.target.classList.value.match(/movie__link/g)) {
-        this.handleMovieDetail(e.target.getAttribute('data-id'));
-      }
-
-      if (e.target.classList.value.match(/movie-detail__close/g)) {
-        const $wrapMovieDetail = document.querySelector('.movie-detail');
-        $wrapMovieDetail.parentElement.removeChild($wrapMovieDetail);
+      if (e.which === 1) {
+        if (e.target.classList.value.match(/movie__link/g)) {
+          this.handleMovieDetail(e.target.getAttribute('data-id'));
+        }
+        if (e.target.classList.value.match(/movie-detail__close/g)) {
+          const $wrapMovieDetail = document.querySelector('.movie-detail');
+          $wrapMovieDetail.parentElement.removeChild($wrapMovieDetail);
+        }
       }
     });
   }

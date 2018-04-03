@@ -147,13 +147,14 @@ var App = function () {
       document.addEventListener('click', function (e) {
         e.preventDefault();
 
-        if (e.target.classList.value.match(/movie__link/g)) {
-          _this3.handleMovieDetail(e.target.getAttribute('data-id'));
-        }
-
-        if (e.target.classList.value.match(/movie-detail__close/g)) {
-          var $wrapMovieDetail = document.querySelector('.movie-detail');
-          $wrapMovieDetail.parentElement.removeChild($wrapMovieDetail);
+        if (e.which === 1) {
+          if (e.target.classList.value.match(/movie__link/g)) {
+            _this3.handleMovieDetail(e.target.getAttribute('data-id'));
+          }
+          if (e.target.classList.value.match(/movie-detail__close/g)) {
+            var $wrapMovieDetail = document.querySelector('.movie-detail');
+            $wrapMovieDetail.parentElement.removeChild($wrapMovieDetail);
+          }
         }
       });
     }
@@ -268,12 +269,29 @@ var Helpers = function () {
         }).indexOf(obj[prop]) === index;
       });
     }
+
+    /**
+     * Format genres to show on detail
+     * @param {array} array
+     */
+
   }, {
     key: 'formatGenres',
     value: function formatGenres(array) {
       return array.reduce(function (total, value, id) {
         return id === 0 ? value.name : total + ', ' + value.name;
       }, '');
+    }
+
+    /**
+     * Format year of release to show on detail
+     * @param {string} date
+     */
+
+  }, {
+    key: 'formatYearRelease',
+    value: function formatYearRelease(date) {
+      return date.split('-')[0];
     }
   }]);
 
@@ -524,7 +542,7 @@ var UI = function () {
       })[0].certification;
 
 
-      return '\n      <div class="movie-detail">\n        <div class="movie-detail__background">\n          <img src="https://image.tmdb.org/t/p/w1280/' + backdrop + '" alt="" class="movie-detail__background__img">\n        </div>\n        <article>\n          <a href="#" class="movie-detail__close js-close-details">\n            &times;\n          </a>\n          <div class="movie-detail__content">\n            <h2 class="movie-detail__content__title">' + title + '</h2>\n            <div class="movie-detail__content-info">\n              <ul class="movie-detail__content-info__list">\n                <li class="movie-detail__content-info__item">\n                  <span class="movie-detail__content-info__rating-star"></span><span class="movie-detail__content-info__rating-text">' + _helpers2.default.calculateRating(voteAverage) + '</span>\n                </li>\n                <li class="movie-detail__content-info__item">\n                  ' + _helpers2.default.formatGenres(genres) + '\n                </li>\n                <li class="movie-detail__content-info__item">\n                  ' + releaseDate + '\n                </li>\n                <li class="movie-detail__content-info__item">\n                  <span class="badge badge--outline">\n                    ' + certification + '\n                  </span>\n                </li>\n              </ul>\n            </div>\n            <div class="movie-detail__content-excerpt">\n              <p class="movie-detail__content-excerpt__text">\n                ' + overview + '\n              </p>\n            </div>\n          </div>\n        </article>\n      </div>\n    ';
+      return '\n      <div class="movie-detail">\n        <div class="movie-detail__background">\n          <img src="https://image.tmdb.org/t/p/w1280/' + backdrop + '" alt="" class="movie-detail__background__img">\n        </div>\n        <article>\n          <a href="#" class="movie-detail__close js-close-details">\n            &times;\n          </a>\n          <div class="movie-detail__content">\n            <h2 class="movie-detail__content__title">' + title + '</h2>\n            <div class="movie-detail__content-info">\n              <ul class="movie-detail__content-info__list">\n                <li class="movie-detail__content-info__item">\n                  <span class="movie-detail__content-info__rating-star"></span><span class="movie-detail__content-info__rating-text">' + _helpers2.default.calculateRating(voteAverage) + '</span>\n                </li>\n                <li class="movie-detail__content-info__item">\n                  ' + _helpers2.default.formatGenres(genres) + '\n                </li>\n                <li class="movie-detail__content-info__item">\n                  ' + _helpers2.default.formatYearRelease(releaseDate) + '\n                </li>\n                <li class="movie-detail__content-info__item">\n                  <span class="badge badge--outline">\n                    ' + certification + '\n                  </span>\n                </li>\n              </ul>\n            </div>\n            <div class="movie-detail__content-excerpt">\n              <p class="movie-detail__content-excerpt__text">\n                ' + overview + '\n              </p>\n            </div>\n          </div>\n        </article>\n      </div>\n    ';
     }
 
     /**

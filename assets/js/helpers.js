@@ -47,8 +47,20 @@ export default class Helpers {
       .filter((obj, index, arr) => arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === index);
   }
 
+  /**
+   * Format genres to show on detail
+   * @param {array} array
+   */
   static formatGenres(array) {
     return array
-      .reduce((total, value, id) => id === 0 ? value.name : `${total}, ${value.name}`, '');
+      .reduce((total, value, id) => (id === 0 ? value.name : `${total}, ${value.name}`), '');
+  }
+
+  /**
+   * Format year of release to show on detail
+   * @param {string} date
+   */
+  static formatYearRelease(date) {
+    return date.split('-')[0];
   }
 }
