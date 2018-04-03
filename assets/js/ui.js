@@ -21,6 +21,7 @@ export default class UI {
     return {
       $btnLoadPopular: document.querySelector('[data-js="loadPopular"]'),
       $btnLoadDiscover: document.querySelector('[data-js="loadDiscover"]'),
+      $btnCloseDetails: document.querySelector('.js-close-details'),
       $inputSearch: document.querySelector('[data-js="inputSearch"]'),
     };
   }
@@ -55,23 +56,30 @@ export default class UI {
     `;
   }
 
+  /**
+   * Render movie details
+   * @param {object} data
+   */
   static renderDetail(data) {
     const {
       title,
       overview,
+      genres,
       backdrop_path: backdrop,
       vote_average: voteAverage,
       release_date: releaseDate,
-    } = data.movieData;
-    const { certification } = data.movieCertification[0].release_dates[0];
+    } = data.details;
+    const { certification } = data.certification.release_dates.filter(obj => obj.certification !== '')[0];
 
     return `
       <div class="movie-detail">
         <div class="movie-detail__background">
           <img src="https://image.tmdb.org/t/p/w1280/${backdrop}" alt="" class="movie-detail__background__img">
         </div>
-
         <article>
+          <a href="#" class="movie-detail__close js-close-details">
+            &times;
+          </a>
           <div class="movie-detail__content">
             <h2 class="movie-detail__content__title">${title}</h2>
             <div class="movie-detail__content-info">
@@ -80,13 +88,15 @@ export default class UI {
                   <span class="movie-detail__content-info__rating-star"></span><span class="movie-detail__content-info__rating-text">${Helpers.calculateRating(voteAverage)}</span>
                 </li>
                 <li class="movie-detail__content-info__item">
-                  Horror
+                  ${Helpers.formatGenres(genres)}
                 </li>
                 <li class="movie-detail__content-info__item">
                   ${releaseDate}
                 </li>
                 <li class="movie-detail__content-info__item">
-                  <span class="badge badge--outline">${certification}</span>
+                  <span class="badge badge--outline">
+                    ${certification}
+                  </span>
                 </li>
               </ul>
             </div>
@@ -99,6 +109,19 @@ export default class UI {
         </article>
       </div>
     `;
+  }
+
+  /**
+   * Show movie details
+   * @param {object} data
+   */
+  static show(data) {
+    const $page = document.querySelector('.page-wrapper');
+    const certification = data.certification.results.filter(obj => obj.iso_3166_1 === 'US')[0];
+    const { details } = data;
+    const movie = { details, certification };
+
+    $page.insertAdjacentHTML('afterend', UI.renderDetail(movie));
   }
 
   /**
@@ -151,21 +174,5 @@ export default class UI {
   loadDiscover() {
     this.discoverStart += 5;
     this.discoverOffset += 5;
-  }
-
-  /**
-   * Show movie details
-   * @param {object} data
-   */
-  show(data) {
-    const $page = document.querySelector('.page-wrapper');
-    const movieData = this.movies.filter(obj => obj.id === data.id)[0];
-    const movieCertification = data.results.filter(obj => obj.iso_3166_1 === 'US');
-    const movie = {
-      movieData,
-      movieCertification,
-    };
-
-    $page.insertAdjacentHTML('afterend', UI.renderDetail(movie));
   }
 }

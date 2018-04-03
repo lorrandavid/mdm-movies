@@ -73,10 +73,14 @@ class App {
    * @param {string} id
    */
   handleMovieDetail(id) {
-    this.Movie.certification(id)
-      .then((res) => {
-        this.UI.show(res.data);
-      })
+    axios.all([this.Movie.find(id), this.Movie.certification(id)])
+      .then(axios.spread((details, certification) => {
+        const data = {
+          details: details.data,
+          certification: certification.data,
+        };
+        UI.show(data);
+      }))
       .catch((err) => {
         throw new Error(Helpers.makeError(err));
       });
@@ -105,6 +109,11 @@ class App {
 
       if (e.target.classList.value.match(/movie__link/g)) {
         this.handleMovieDetail(e.target.getAttribute('data-id'));
+      }
+
+      if (e.target.classList.value.match(/movie-detail__close/g)) {
+        const $wrapMovieDetail = document.querySelector('.movie-detail');
+        $wrapMovieDetail.parentElement.removeChild($wrapMovieDetail);
       }
     });
   }

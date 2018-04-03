@@ -46,4 +46,9 @@ export default class Helpers {
     return array
       .filter((obj, index, arr) => arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === index);
   }
+
+  static formatGenres(array) {
+    return array
+      .reduce((total, value, id) => id === 0 ? value.name : `${total}, ${value.name}`, '');
+  }
 }
