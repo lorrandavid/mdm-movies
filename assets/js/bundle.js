@@ -43,17 +43,24 @@ var App = function () {
       var _this = this;
 
       e.preventDefault();
-      this.UI.loadPopular();
+      e.target.classList.add('section__btn-load--clicked');
 
-      if (this.UI.popularOffset > this.UI.popular.length) {
-        this.Movie.list().then(function (res) {
-          _this.UI.listPopular(res.data.results);
-        }).catch(function (err) {
-          throw new Error(_helpers2.default.makeError(err));
-        });
-      } else {
-        this.UI.listPopular();
-      }
+      setTimeout(function () {
+        _this.UI.loadPopular();
+
+        if (_this.UI.popularOffset > _this.UI.popular.length) {
+          _this.Movie.list().then(function (res) {
+            _this.UI.listPopular(res.data.results);
+          }).catch(function (err) {
+            throw new Error(_helpers2.default.makeError(err));
+          }).finally(function () {
+            e.target.classList.remove('section__btn-load--clicked');
+          });
+        } else {
+          _this.UI.listPopular();
+          e.target.classList.remove('section__btn-load--clicked');
+        }
+      }, 1000);
     }
 
     /**
@@ -67,17 +74,24 @@ var App = function () {
       var _this2 = this;
 
       e.preventDefault();
-      this.UI.loadDiscover();
+      e.target.classList.add('section__btn-load--clicked');
 
-      if (this.UI.discoverOffset > this.UI.discover.length) {
-        this.Movie.discover().then(function (res) {
-          _this2.UI.listDiscover(res.data.results);
-        }).catch(function (err) {
-          throw new Error(_helpers2.default.makeError(err));
-        });
-      } else {
-        this.UI.listDiscover();
-      }
+      setTimeout(function () {
+        _this2.UI.loadDiscover();
+
+        if (_this2.UI.discoverOffset > _this2.UI.discover.length) {
+          _this2.Movie.discover().then(function (res) {
+            _this2.UI.listDiscover(res.data.results);
+          }).catch(function (err) {
+            throw new Error(_helpers2.default.makeError(err));
+          }).finally(function () {
+            e.target.classList.remove('section__btn-load--clicked');
+          });
+        } else {
+          _this2.UI.listDiscover();
+          e.target.classList.remove('section__btn-load--clicked');
+        }
+      }, 1000);
     }
 
     /**

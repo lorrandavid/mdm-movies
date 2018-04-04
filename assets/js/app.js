@@ -15,19 +15,27 @@ class App {
    */
   handleLoadPopular(e) {
     e.preventDefault();
-    this.UI.loadPopular();
+    e.target.classList.add('section__btn-load--clicked');
 
-    if (this.UI.popularOffset > this.UI.popular.length) {
-      this.Movie.list()
-        .then((res) => {
-          this.UI.listPopular(res.data.results);
-        })
-        .catch((err) => {
-          throw new Error(Helpers.makeError(err));
-        });
-    } else {
-      this.UI.listPopular();
-    }
+    setTimeout(() => {
+      this.UI.loadPopular();
+
+      if (this.UI.popularOffset > this.UI.popular.length) {
+        this.Movie.list()
+          .then((res) => {
+            this.UI.listPopular(res.data.results);
+          })
+          .catch((err) => {
+            throw new Error(Helpers.makeError(err));
+          })
+          .finally(() => {
+            e.target.classList.remove('section__btn-load--clicked');
+          });
+      } else {
+        this.UI.listPopular();
+        e.target.classList.remove('section__btn-load--clicked');
+      }
+    }, 1000);
   }
 
   /**
@@ -36,19 +44,27 @@ class App {
    */
   handleLoadDiscover(e) {
     e.preventDefault();
-    this.UI.loadDiscover();
+    e.target.classList.add('section__btn-load--clicked');
 
-    if (this.UI.discoverOffset > this.UI.discover.length) {
-      this.Movie.discover()
-        .then((res) => {
-          this.UI.listDiscover(res.data.results);
-        })
-        .catch((err) => {
-          throw new Error(Helpers.makeError(err));
-        });
-    } else {
-      this.UI.listDiscover();
-    }
+    setTimeout(() => {
+      this.UI.loadDiscover();
+
+      if (this.UI.discoverOffset > this.UI.discover.length) {
+        this.Movie.discover()
+          .then((res) => {
+            this.UI.listDiscover(res.data.results);
+          })
+          .catch((err) => {
+            throw new Error(Helpers.makeError(err));
+          })
+          .finally(() => {
+            e.target.classList.remove('section__btn-load--clicked');
+          });
+      } else {
+        this.UI.listDiscover();
+        e.target.classList.remove('section__btn-load--clicked');
+      }
+    }, 1000);
   }
 
   /**
