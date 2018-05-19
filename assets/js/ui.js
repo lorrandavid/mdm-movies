@@ -111,10 +111,6 @@ export default class UI {
     `;
   }
 
-  /**
-   * Show movie details
-   * @param {object} data
-   */
   static show(data) {
     const $page = document.querySelector('.page-wrapper');
     const certification = data.certification.results.filter(obj => obj.iso_3166_1 === 'US')[0];
@@ -148,7 +144,7 @@ export default class UI {
    */
   listDiscover(movies) {
     if (typeof movies !== 'undefined') {
-      this.discover = this.discover.concat(movies);
+      this.discover = this.discover.concat(Helpers.shuffleArray(movies));
       this.movies = Helpers.uniqArrayObj(this.movies.concat(movies), 'id');
     }
 

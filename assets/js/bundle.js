@@ -307,6 +307,17 @@ var Helpers = function () {
     value: function formatYearRelease(date) {
       return date.split('-')[0];
     }
+  }, {
+    key: 'shuffleArray',
+    value: function shuffleArray(arr) {
+      return arr.map(function (a) {
+        return [Math.random(), a];
+      }).sort(function (a, b) {
+        return a[0] - b[0];
+      }).map(function (a) {
+        return a[1];
+      });
+    }
   }]);
 
   return Helpers;
@@ -364,7 +375,7 @@ var Movie = function () {
     key: 'discover',
     value: function discover() {
       this.discoverPage = this.discoverPage + 1;
-      return _axios2.default.get(_helpers2.default.makeURL('discover/movie', '&page=' + this.discoverPage + '&sort_by=popularity.desc', this.key));
+      return _axios2.default.get(_helpers2.default.makeURL('discover/movie', '&page=' + this.discoverPage, this.key));
     }
 
     /**
@@ -475,7 +486,7 @@ var UI = function () {
     key: 'listDiscover',
     value: function listDiscover(movies) {
       if (typeof movies !== 'undefined') {
-        this.discover = this.discover.concat(movies);
+        this.discover = this.discover.concat(_helpers2.default.shuffleArray(movies));
         this.movies = _helpers2.default.uniqArrayObj(this.movies.concat(movies), 'id');
       }
 
@@ -558,12 +569,6 @@ var UI = function () {
 
       return '\n      <div class="movie-detail">\n        <div class="movie-detail__background">\n          <img src="https://image.tmdb.org/t/p/w1280/' + backdrop + '" alt="" class="movie-detail__background__img">\n        </div>\n        <article>\n          <a href="#" class="movie-detail__close js-close-details">\n            &times;\n          </a>\n          <div class="movie-detail__content">\n            <h2 class="movie-detail__content__title">' + title + '</h2>\n            <div class="movie-detail__content-info">\n              <ul class="movie-detail__content-info__list">\n                <li class="movie-detail__content-info__item">\n                  <span class="movie-detail__content-info__rating-star"></span><span class="movie-detail__content-info__rating-text">' + _helpers2.default.calculateRating(voteAverage) + '</span>\n                </li>\n                <li class="movie-detail__content-info__item">\n                  ' + _helpers2.default.formatGenres(genres) + '\n                </li>\n                <li class="movie-detail__content-info__item">\n                  ' + _helpers2.default.formatYearRelease(releaseDate) + '\n                </li>\n                <li class="movie-detail__content-info__item">\n                  <span class="badge badge--outline">\n                    ' + certification + '\n                  </span>\n                </li>\n              </ul>\n            </div>\n            <div class="movie-detail__content-excerpt">\n              <p class="movie-detail__content-excerpt__text">\n                ' + overview + '\n              </p>\n            </div>\n          </div>\n        </article>\n      </div>\n    ';
     }
-
-    /**
-     * Show movie details
-     * @param {object} data
-     */
-
   }, {
     key: 'show',
     value: function show(data) {

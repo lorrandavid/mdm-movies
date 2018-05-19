@@ -1,11 +1,14 @@
 @import '../../node_modules/reset-css/reset.css';
 
+:root {
+  --font-color: rgb(43, 43, 43);
+}
+
 body {
   font-family: 'Nunito', sans-serif;
   font-size: 14px;
-  background: #FFF;
-  background: rgb(17, 26, 31);
-  color: #fff;
+  background: #fff;
+  color: var(--font-color);
 }
 
 .page-wrapper {
@@ -63,7 +66,7 @@ body {
   font-weight: 700;
   font-size: 16px;
   margin-bottom: 4px;
-  color: #fff;
+  color: var(--font-color);
 }
 
 .movie-content__rating {
@@ -88,7 +91,8 @@ body {
 .movie-header__rating__text {
   font-weight: 700;
   margin-left: 4px;
-  color: rgba(255, 255, 255, .85);
+  color: var(--font-color);
+  opacity: .85;
 }
 
 .movie-header__rating__star:before,
@@ -193,17 +197,20 @@ body {
 .movie-detail article {
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   flex-direction: column;
   align-items: flex-start;
-  width: 80%;
-  max-width: 640px;
+  width: 100%;
+  max-width: 90vw;
   margin: 0 auto;
+  position: relative;
 }
 
 .movie-detail .movie-detail__content {
   position: relative;
   z-index: 99;
+  max-width: 640px;
+  padding-bottom: 10vh;
 }
 
 .movie-detail .movie-detail__content__title {
@@ -310,16 +317,18 @@ body {
   height: 100%;
   width: 100%;
   object-fit: cover;
-  opacity: .1;
+  opacity: .45;
 }
 
 .movie-detail .movie-detail__close {
 	color: #fff;
 	display: inline-block;
-	margin-bottom: 64px;
 	text-decoration: none;
 	font-size: 32px;
-	z-index: 9;
+  z-index: 9;
+  position: absolute;
+  top: 10vh;
+  left: 0;
 }
 
 .badge {

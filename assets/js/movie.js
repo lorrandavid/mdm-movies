@@ -21,7 +21,7 @@ export default class Movie {
    */
   discover() {
     this.discoverPage = this.discoverPage + 1;
-    return axios.get(Helpers.makeURL('discover/movie', `&page=${this.discoverPage}&sort_by=popularity.desc`, this.key));
+    return axios.get(Helpers.makeURL('discover/movie', `&page=${this.discoverPage}`, this.key));
   }
 
   /**

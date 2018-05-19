@@ -63,4 +63,10 @@ export default class Helpers {
   static formatYearRelease(date) {
     return date.split('-')[0];
   }
+
+  static shuffleArray(arr) {
+    return arr.map(a => [Math.random(),a])
+              .sort((a, b) => a[0]-b[0])
+              .map(a => a[1]);
+  }
 }
