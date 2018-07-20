@@ -72,16 +72,19 @@ class App {
    * @param {event} e
    */
   handleSearch(e) {
-    const { value } = e.target.value;
+    const { value } = e.key;
     const movies = [];
 
-    this.Movie.search(value)
-      .then((res) => {
-        movies.push(res);
-      })
-      .catch((err) => {
-        throw new Error(Helpers.makeError(err));
-      });
+    // Must check if value is a real key
+    // Then search and populate the grid I designed
+
+    // this.Movie.search(value)
+    //   .then((res) => {
+    //     movies.push(res);
+    //   })
+    //   .catch((err) => {
+    //     throw new Error(Helpers.makeError(err));
+    //   });
   }
 
   /**
@@ -116,9 +119,13 @@ class App {
       this.handleLoadDiscover(e);
     });
 
-    $inputSearch.addEventListener('keyup', (e) => {
-      this.handleSearch(e);
-    });
+    {
+      let timer = 0;
+      $inputSearch.addEventListener('keyup', (e) => {
+        clearTimeout(timer);
+        timer = setTimeout(this.handleSearch.bind(null, e), 3000);
+      });
+    }
 
     document.addEventListener('click', (e) => {
       e.preventDefault();

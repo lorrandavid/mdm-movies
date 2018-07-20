@@ -102,15 +102,20 @@ var App = function () {
   }, {
     key: 'handleSearch',
     value: function handleSearch(e) {
-      var value = e.target.value.value;
+      var value = e.key.value;
 
       var movies = [];
 
-      this.Movie.search(value).then(function (res) {
-        movies.push(res);
-      }).catch(function (err) {
-        throw new Error(_helpers2.default.makeError(err));
-      });
+      // Must check if value is a real key
+      // Then search and populate the grid I designed
+
+      // this.Movie.search(value)
+      //   .then((res) => {
+      //     movies.push(res);
+      //   })
+      //   .catch((err) => {
+      //     throw new Error(Helpers.makeError(err));
+      //   });
     }
 
     /**
@@ -154,9 +159,13 @@ var App = function () {
         _this3.handleLoadDiscover(e);
       });
 
-      $inputSearch.addEventListener('keyup', function (e) {
-        _this3.handleSearch(e);
-      });
+      {
+        var timer = 0;
+        $inputSearch.addEventListener('keyup', function (e) {
+          clearTimeout(timer);
+          timer = setTimeout(_this3.handleSearch.bind(null, e), 3000);
+        });
+      }
 
       document.addEventListener('click', function (e) {
         e.preventDefault();
