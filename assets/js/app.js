@@ -42,30 +42,30 @@ class App {
    * Handle load more discover
    * @param {event} e
    */
-  handleLoadDiscover(e) {
-    e.preventDefault();
-    e.target.classList.add('section__btn-load--clicked');
+  // handleLoadDiscover(e) {
+  //   e.preventDefault();
+  //   e.target.classList.add('section__btn-load--clicked');
 
-    setTimeout(() => {
-      this.UI.loadDiscover();
+  //   setTimeout(() => {
+  //     this.UI.loadDiscover();
 
-      if (this.UI.discoverOffset > this.UI.discover.length) {
-        this.Movie.discover()
-          .then((res) => {
-            this.UI.listDiscover(res.data.results);
-          })
-          .catch((err) => {
-            throw new Error(Helpers.makeError(err));
-          })
-          .finally(() => {
-            e.target.classList.remove('section__btn-load--clicked');
-          });
-      } else {
-        this.UI.listDiscover();
-        e.target.classList.remove('section__btn-load--clicked');
-      }
-    }, 1000);
-  }
+  //     if (this.UI.discoverOffset > this.UI.discover.length) {
+  //       this.Movie.discover()
+  //         .then((res) => {
+  //           this.UI.listDiscover(res.data.results);
+  //         })
+  //         .catch((err) => {
+  //           throw new Error(Helpers.makeError(err));
+  //         })
+  //         .finally(() => {
+  //           e.target.classList.remove('section__btn-load--clicked');
+  //         });
+  //     } else {
+  //       this.UI.listDiscover();
+  //       e.target.classList.remove('section__btn-load--clicked');
+  //     }
+  //   }, 1000);
+  // }
 
   /**
    * Handle search
@@ -109,14 +109,10 @@ class App {
    * Init events
    */
   initEvents() {
-    const { $btnLoadPopular, $btnLoadDiscover, $inputSearch } = UI.elements();
+    const { $btnLoadPopular, $inputSearch } = UI.elements();
 
     $btnLoadPopular.addEventListener('click', (e) => {
       this.handleLoadPopular(e);
-    });
-
-    $btnLoadDiscover.addEventListener('click', (e) => {
-      this.handleLoadDiscover(e);
     });
 
     {
@@ -145,17 +141,25 @@ class App {
   /**
    * Init app
    */
-  init() {
+  async init() {
     this.initEvents();
 
-    axios.all([this.Movie.list(), this.Movie.discover()])
-      .then(axios.spread((list, discover) => {
-        this.UI.listPopular(list.data.results);
-        this.UI.listDiscover(discover.data.results);
-      }))
-      .catch((err) => {
-        throw new Error(Helpers.makeError(err));
-      });
+    try {
+      var list = await this.Movie.list();
+      this.UI.listPopular(list);
+    } catch (err) {
+      throw new Error(Helpers.makeError(err));
+    }
+
+
+    // axios.all([this.Movie.list(), this.Movie.discover()])
+    //   .then(axios.spread((list, discover) => {
+    //     this.UI.listPopular(list.data.results);
+    //     this.UI.listDiscover(discover.data.results);
+    //   }))
+    //   .catch((err) => {
+    //     throw new Error(Helpers.makeError(err));
+    //   });
   }
 }
 

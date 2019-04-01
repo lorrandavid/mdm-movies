@@ -21,6 +21,8 @@ var _helpers2 = _interopRequireDefault(_helpers);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var App = function () {
@@ -67,32 +69,30 @@ var App = function () {
      * Handle load more discover
      * @param {event} e
      */
+    // handleLoadDiscover(e) {
+    //   e.preventDefault();
+    //   e.target.classList.add('section__btn-load--clicked');
 
-  }, {
-    key: 'handleLoadDiscover',
-    value: function handleLoadDiscover(e) {
-      var _this2 = this;
+    //   setTimeout(() => {
+    //     this.UI.loadDiscover();
 
-      e.preventDefault();
-      e.target.classList.add('section__btn-load--clicked');
-
-      setTimeout(function () {
-        _this2.UI.loadDiscover();
-
-        if (_this2.UI.discoverOffset > _this2.UI.discover.length) {
-          _this2.Movie.discover().then(function (res) {
-            _this2.UI.listDiscover(res.data.results);
-          }).catch(function (err) {
-            throw new Error(_helpers2.default.makeError(err));
-          }).finally(function () {
-            e.target.classList.remove('section__btn-load--clicked');
-          });
-        } else {
-          _this2.UI.listDiscover();
-          e.target.classList.remove('section__btn-load--clicked');
-        }
-      }, 1000);
-    }
+    //     if (this.UI.discoverOffset > this.UI.discover.length) {
+    //       this.Movie.discover()
+    //         .then((res) => {
+    //           this.UI.listDiscover(res.data.results);
+    //         })
+    //         .catch((err) => {
+    //           throw new Error(Helpers.makeError(err));
+    //         })
+    //         .finally(() => {
+    //           e.target.classList.remove('section__btn-load--clicked');
+    //         });
+    //     } else {
+    //       this.UI.listDiscover();
+    //       e.target.classList.remove('section__btn-load--clicked');
+    //     }
+    //   }, 1000);
+    // }
 
     /**
      * Handle search
@@ -144,26 +144,21 @@ var App = function () {
   }, {
     key: 'initEvents',
     value: function initEvents() {
-      var _this3 = this;
+      var _this2 = this;
 
       var _UI$elements = _ui2.default.elements(),
           $btnLoadPopular = _UI$elements.$btnLoadPopular,
-          $btnLoadDiscover = _UI$elements.$btnLoadDiscover,
           $inputSearch = _UI$elements.$inputSearch;
 
       $btnLoadPopular.addEventListener('click', function (e) {
-        _this3.handleLoadPopular(e);
-      });
-
-      $btnLoadDiscover.addEventListener('click', function (e) {
-        _this3.handleLoadDiscover(e);
+        _this2.handleLoadPopular(e);
       });
 
       {
         var timer = 0;
         $inputSearch.addEventListener('keyup', function (e) {
           clearTimeout(timer);
-          timer = setTimeout(_this3.handleSearch.bind(null, e), 3000);
+          timer = setTimeout(_this2.handleSearch.bind(null, e), 3000);
         });
       }
 
@@ -172,7 +167,7 @@ var App = function () {
 
         if (e.which === 1) {
           if (e.target.classList.value.match(/movie__link/g)) {
-            _this3.handleMovieDetail(e.target.getAttribute('data-id'));
+            _this2.handleMovieDetail(e.target.getAttribute('data-id'));
           }
           if (e.target.classList.value.match(/movie-detail__close/g)) {
             var $wrapMovieDetail = document.querySelector('.movie-detail');
@@ -188,18 +183,46 @@ var App = function () {
 
   }, {
     key: 'init',
-    value: function init() {
-      var _this4 = this;
+    value: function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var list;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                this.initEvents();
 
-      this.initEvents();
+                _context.next = 3;
+                return this.Movie.list();
 
-      _axios2.default.all([this.Movie.list(), this.Movie.discover()]).then(_axios2.default.spread(function (list, discover) {
-        _this4.UI.listPopular(list.data.results);
-        _this4.UI.listDiscover(discover.data.results);
-      })).catch(function (err) {
-        throw new Error(_helpers2.default.makeError(err));
-      });
-    }
+              case 3:
+                list = _context.sent;
+
+                console.log(list);
+
+                // axios.all([this.Movie.list(), this.Movie.discover()])
+                //   .then(axios.spread((list, discover) => {
+                //     this.UI.listPopular(list.data.results);
+                //     this.UI.listDiscover(discover.data.results);
+                //   }))
+                //   .catch((err) => {
+                //     throw new Error(Helpers.makeError(err));
+                //   });
+
+              case 5:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function init() {
+        return _ref.apply(this, arguments);
+      }
+
+      return init;
+    }()
   }]);
 
   return App;
